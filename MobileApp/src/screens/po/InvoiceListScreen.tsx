@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { useTheme } from "../../theme/ThemeContext";
 import { poService } from "../../services/poService";
 import { Invoice } from "../../services/mocks/mockData";
+import { SkeletonListScreen } from "../../components/common/SkeletonLoader";
 
 const fmt = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
@@ -24,6 +25,10 @@ export const InvoiceListScreen = ({ navigation }: any) => {
     queryKey: ["invoices"],
     queryFn: poService.getInvoices,
   });
+
+  if (isLoading && data.length === 0) {
+    return <SkeletonListScreen count={4} />;
+  }
 
   return (
     <FlatList
@@ -74,7 +79,7 @@ export const InvoiceListScreen = ({ navigation }: any) => {
         <View style={styles.empty}>
           <MaterialCommunityIcons name="receipt-text-outline" size={52} color={colors.textMuted} />
           <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-            {isLoading ? "Loading..." : "No invoices yet. Invoices appear after POs are delivered."}
+            No invoices yet. Invoices appear after POs are delivered.
           </Text>
         </View>
       }
