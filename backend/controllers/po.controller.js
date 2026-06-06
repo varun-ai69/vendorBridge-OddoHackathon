@@ -22,7 +22,7 @@ exports.generatePo = catchAsync(async (req, res, next) => {
     await client.query('BEGIN');
 
     // 1. Validate Approval State
-    const appCheck = await client.query('SELECT status FROM approval_requests WHERE id = $1 AND org_id = $2 AND rfq_id = $3 AND quotation_id = $4', [approval_id, orgId, rrfq_id, quotation_id]);
+    const appCheck = await client.query('SELECT status FROM approval_requests WHERE id = $1 AND org_id = $2 AND rfq_id = $3 AND quotation_id = $4', [approval_id, orgId, rfq_id, quotation_id]);
     if (appCheck.rows.length === 0) throw new AppError('Valid approval request not found', 404, 'NOT_FOUND');
     if (appCheck.rows[0].status !== 'approved') throw new AppError('Cannot generate PO without an approved request status.', 400, 'BAD_REQUEST');
 

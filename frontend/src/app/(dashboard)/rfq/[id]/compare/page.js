@@ -64,11 +64,11 @@ export default function ComparePage() {
 
       {data.summary && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <Card className="!p-4 border-emerald-200 dark:border-emerald-800">
+          <Card className="! border-emerald-200 dark:border-emerald-800">
             <p className="text-xs text-muted uppercase tracking-wider">Lowest Price</p>
             <p className="font-semibold mt-1">{data.summary.lowest_price_vendor_name || "—"}</p>
           </Card>
-          <Card className="!p-4 border-accent/40 dark:border-accent/20">
+          <Card className="! border-accent/40 dark:border-accent/20">
             <p className="text-xs text-muted uppercase tracking-wider">Fastest Delivery</p>
             <p className="font-semibold mt-1">{data.summary.fastest_delivery_vendor_name || "—"}</p>
           </Card>
@@ -83,7 +83,7 @@ export default function ComparePage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[var(--border)]">
+                <tr className="border-b border-(--border)">
                   <th className="text-left py-2 px-3 text-xs text-muted uppercase">Vendor</th>
                   <th className="text-left py-2 px-3 text-xs text-muted uppercase">Unit Price</th>
                   <th className="text-left py-2 px-3 text-xs text-muted uppercase">Total</th>
@@ -93,7 +93,7 @@ export default function ComparePage() {
               </thead>
               <tbody>
                 {(item.vendors || []).map((v, vi) => (
-                  <tr key={vi} className={`border-b border-[var(--border)] ${v.is_lowest_price ? "bg-emerald-50/50 dark:bg-emerald-900/10" : ""}`}>
+                  <tr key={vi} className={`border-b border-(--border) ${v.is_lowest_price ? "bg-emerald-50/50 dark:bg-emerald-900/10" : ""}`}>
                     <td className="py-3 px-3 font-medium">
                       {v.vendor_name}
                       {v.is_lowest_price && <Badge color="emerald" className="ml-2">Lowest</Badge>}

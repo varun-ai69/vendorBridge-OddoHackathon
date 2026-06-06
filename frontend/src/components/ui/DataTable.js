@@ -30,10 +30,10 @@ export default function DataTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-[var(--border)]">
+    <div className="overflow-x-auto rounded-xl border border-(--border)">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-[var(--border)] bg-accent-muted/50">
+          <tr className="border-b border-(--border) bg-accent-muted/50">
             {columns.map((col) => (
               <th key={col.key} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted">
                 {col.label}
@@ -47,7 +47,7 @@ export default function DataTable({
               key={row[keyField] || i}
               onClick={() => onRowClick?.(row)}
               className={clsx(
-                "border-b border-[var(--border)] transition-colors last:border-0",
+                "border-b border-(--border) transition-colors last:border-0",
                 onRowClick && "cursor-pointer hover:bg-accent-muted/30"
               )}
             >

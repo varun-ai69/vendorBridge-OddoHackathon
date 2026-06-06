@@ -20,14 +20,14 @@ export default function Card({
       className={clsx(
         "rounded-xl p-5",
         accent && "relative overflow-hidden",
-        glass ? "glass-card" : "bg-surface border border-[var(--border)] shadow-[var(--shadow-sm)]",
+        glass ? "glass-card" : "bg-surface border border-(--border) shadow-(--shadow-sm)",
         hover && "depth-hover cursor-pointer",
         className
       )}
       {...props}
     >
       {accent && (
-        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-accent/70 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-linear-to- from-transparent via-accent/70 to-transparent" />
       )}
       {children}
     </motion.div>

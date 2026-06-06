@@ -48,7 +48,7 @@ export default function ReportsPage() {
             { label: "POs Generated", value: summary.total_pos_generated },
             { label: "Total Spend", value: formatCurrency(summary.total_spend) },
           ].map((stat) => (
-            <Card key={stat.label} className="!p-4">
+            <Card key={stat.label} className="!">
               <p className="text-xs text-muted uppercase tracking-wider">{stat.label}</p>
               <p className="text-xl font-bold mt-1">{stat.value ?? "—"}</p>
             </Card>
@@ -74,7 +74,7 @@ export default function ReportsPage() {
           {(vendors?.vendors || summary?.top_vendors || []).length > 0 ? (
             <div className="space-y-3">
               {(vendors?.vendors || summary?.top_vendors || []).slice(0, 5).map((v, i) => (
-                <div key={i} className="flex items-center justify-between rounded-lg border border-[var(--border)] p-3">
+                <div key={i} className="flex items-center justify-between rounded-lg border border-(--border) p-3">
                   <div>
                     <p className="font-medium text-sm">{v.vendor_name}</p>
                     <p className="text-xs text-muted">{v.total_orders || v.total_rfqs_received} orders</p>

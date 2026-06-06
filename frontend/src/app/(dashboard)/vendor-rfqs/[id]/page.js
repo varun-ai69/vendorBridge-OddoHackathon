@@ -21,16 +21,17 @@ export default function VendorRfqDetailPage() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
     total_amount: "", delivery_timeline_days: "", delivery_terms: "Ex-Works",
-    payment_terms: "Net 30", validity_days: "30", notes: "",
+    payment_terms: "Net 30", validity_days: "30", notes: "", currency: "INR",
     items: [],
   });
 
   useEffect(() => {
-    getVendorRfq(id).then((data) => {
-      setRfq(data);
+    getVendorRfq(id).then((res) => {
+      const rfqData = res.rfq || res;
+      setRfq(rfqData);
       setForm((f) => ({
         ...f,
-        items: (data.items || []).map((item) => ({
+        items: (rfqData.items || []).map((item) => ({
           rfq_item_id: item.id || item.rfq_item_id,
           product_name: item.product_name,
           unit_price: "",
@@ -38,6 +39,7 @@ export default function VendorRfqDetailPage() {
           unit: item.unit,
           tax_percent: 18,
           subtotal: 0,
+          tax_amount: 0,
         })),
       }));
     }).catch(() => router.push("/vendor-rfqs")).finally(() => setLoading(false));
@@ -47,10 +49,12 @@ export default function VendorRfqDetailPage() {
     const items = [...form.items];
     const qty = items[i].quantity;
     const subtotal = Number(price) * qty;
-    items[i] = { ...items[i], unit_price: price, subtotal };
-    const total = items.reduce((s, it) => s + (it.subtotal || 0), 0);
-    const tax = total * 0.18;
-    setForm({ ...form, items, total_amount: Math.round(total + tax) });
+    const taxPercent = items[i].tax_percent || 18;
+    const taxAmount = Math.round(subtotal * (taxPercent / 100));
+    items[i] = { ...items[i], unit_price: price, subtotal, tax_amount: taxAmount };
+    const totalSubtotal = items.reduce((s, it) => s + (it.subtotal || 0), 0);
+    const totalTax = items.reduce((s, it) => s + (it.tax_amount || 0), 0);
+    setForm({ ...form, items, total_amount: Math.round(totalSubtotal + totalTax) });
   };
 
   const handleSubmit = async (e) => {
@@ -86,7 +90,7 @@ export default function VendorRfqDetailPage() {
         <Card className="lg:col-span-2">
           <h3 className="font-semibold mb-3">Items Requested</h3>
           {(rfq.items || []).map((item, i) => (
-            <div key={i} className="rounded-lg border border-[var(--border)] p-4 mb-3">
+            <div key={i} className="rounded-lg border border-(--border) p-4 mb-3">
               <p className="font-medium">{item.product_name}</p>
               <p className="text-sm text-muted">{item.description}</p>
               <p className="text-sm mt-1">Qty: {item.quantity} {item.unit}</p>

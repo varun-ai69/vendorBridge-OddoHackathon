@@ -21,7 +21,7 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [inviteLoading, setInviteLoading] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", role: "procurement_officer", phone: "", department: "", company_name: "", generated_password: "" });
+  const [form, setForm] = useState({ name: "", email: "", role: "procurement_officer", phone: "", department: "", generated_password: "" });
 
   useEffect(() => {
     if (user?.role !== "admin") { router.replace("/dashboard"); return; }
@@ -42,7 +42,7 @@ export default function UsersPage() {
     try {
       await inviteUser(form);
       setModalOpen(false);
-      setForm({ name: "", email: "", role: "procurement_officer", phone: "", department: "", company_name: "", generated_password: "" });
+      setForm({ name: "", email: "", role: "procurement_officer", phone: "", department: "", generated_password: "" });
       loadUsers();
     } catch { /* handled by UI */ }
     finally { setInviteLoading(false); }
@@ -84,19 +84,13 @@ export default function UsersPage() {
           <Input label="Email Address" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
           <div>
             <label className="text-sm font-medium text-foreground/80">Role</label>
-            <select className="mt-1.5 w-full rounded-lg border border-[var(--border-strong)] bg-surface px-3 py-2.5 text-sm" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
+            <select className="mt-1.5 w-full rounded-lg border border-(--border-strong) bg-surface px-3 py-2.5 text-sm" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
               <option value="procurement_officer">Procurement Officer</option>
               <option value="manager">Manager</option>
-              <option value="vendor">Vendor Partner</option>
             </select>
           </div>
           <Input label="Phone Number" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-          
-          {form.role === "vendor" ? (
-            <Input label="Company Name" placeholder="e.g. Delta Castings Ltd" value={form.company_name} onChange={(e) => setForm({ ...form, company_name: e.target.value })} required />
-          ) : (
-            <Input label="Department" placeholder="e.g. Procurement" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} />
-          )}
+          <Input label="Department" placeholder="e.g. Procurement" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} />
 
           <Input label="Temporary Password" value={form.generated_password} onChange={(e) => setForm({ ...form, generated_password: e.target.value })} required />
           <Button type="submit" loading={inviteLoading} className="w-full">Register & Create Account</Button>

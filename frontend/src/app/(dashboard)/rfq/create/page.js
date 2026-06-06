@@ -89,7 +89,7 @@ export default function CreateRfqPage() {
             <Button type="button" variant="secondary" size="sm" icon={IoAdd} onClick={() => setForm({ ...form, items: [...form.items, emptyItem()] })}>Add Item</Button>
           </div>
           {form.items.map((item, i) => (
-            <div key={i} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 pb-4 border-b border-[var(--border)] last:border-0">
+            <div key={i} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 pb-4 border-b border-(--border) last:border-0">
               <Input label="Product" value={item.product_name} onChange={(e) => updateItem(i, "product_name", e.target.value)} required />
               <Input label="Quantity" type="number" value={item.quantity} onChange={(e) => updateItem(i, "quantity", e.target.value)} required />
               <Input label="Unit" value={item.unit} onChange={(e) => updateItem(i, "unit", e.target.value)} />
@@ -106,7 +106,7 @@ export default function CreateRfqPage() {
           <h3 className="font-semibold mb-4">Select Vendors</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {vendors.map((v) => (
-              <label key={v.id} className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${form.vendor_ids.includes(v.id) ? "border-accent bg-accent-muted" : "border-[var(--border)]"}`}>
+              <label key={v.id} className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${form.vendor_ids.includes(v.id) ? "border-accent bg-accent-muted" : "border-(--border)"}`}>
                 <input type="checkbox" checked={form.vendor_ids.includes(v.id)} onChange={() => toggleVendor(v.id)} className="accent-accent" />
                 <div>
                   <p className="text-sm font-medium">{v.company_name}</p>

@@ -82,7 +82,8 @@ export default function VendorsPage() {
     company_name: "", tagline: "", contact_person: "", email: "", phone: "",
     address: "", city: "", state: "", gst_number: "", pan_number: "",
     category: [], industry: "Manufacturing", website: "", about: "",
-    generated_password: "Password@123", premium: false
+    generated_password: "Password@123", premium: false,
+    bank_name: "", bank_account: "", bank_ifsc: "",
   });
   const [saving, setSaving] = useState(false);
 
@@ -178,12 +179,19 @@ export default function VendorsPage() {
     setSaving(true);
     try {
       const payload = {
-        ...form,
+        company_name: form.company_name,
+        contact_person: form.contact_person,
+        email: form.email,
+        phone: form.phone,
+        address: form.address,
+        gst_number: form.gst_number,
+        pan_number: form.pan_number,
         category: form.category.length > 0 ? form.category : ["General"],
-        rating: 4.0,
-        rfqs_completed: 0,
-        response_rate: 100,
-        created_at: new Date().toISOString()
+        bank_name: form.bank_name || "",
+        bank_account: form.bank_account || "",
+        bank_ifsc: form.bank_ifsc || "",
+        generated_password: form.generated_password,
+        notes: form.about || "",
       };
       await createVendor(payload);
       setAddModalOpen(false);
@@ -193,7 +201,8 @@ export default function VendorsPage() {
         company_name: "", tagline: "", contact_person: "", email: "", phone: "",
         address: "", city: "", state: "", gst_number: "", pan_number: "",
         category: [], industry: "Manufacturing", website: "", about: "",
-        generated_password: "Password@123", premium: false
+        generated_password: "Password@123", premium: false,
+        bank_name: "", bank_account: "", bank_ifsc: "",
       });
     } catch (err) {
       alert(err.message || "Failed to create vendor");
@@ -322,14 +331,14 @@ export default function VendorsPage() {
   return (
     <PageTransition>
       {/* Upper Navigation Tabs & Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-[var(--border)] pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-(--border) pb-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Vendor Management</h1>
           <p className="text-sm text-muted">Discover suppliers, assign pipelines, and collaborate on RFQs</p>
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex bg-surface-elevated p-1 rounded-xl border border-[var(--border)] self-start md:self-auto">
+        <div className="flex bg-surface-elevated p-1 rounded-xl border border-(--border) self-start md:self-auto">
           {[
             { id: "directory", label: "Vendor Directory", icon: IoStorefront },
             { id: "my-vendors", label: "My Vendors", icon: IoBriefcase },
@@ -356,7 +365,7 @@ export default function VendorsPage() {
       {activeTab === "directory" && (
         <div>
           {/* Advanced Filter Bar */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 mb-6 bg-surface-elevated/40 p-4 rounded-xl border border-[var(--border)] backdrop-blur-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 mb-6 bg-surface-elevated/40 p-4 rounded-xl border border-(--border) backdrop-blur-sm">
             {/* Search */}
             <div className="lg:col-span-3">
               <Input
@@ -364,7 +373,7 @@ export default function VendorsPage() {
                 placeholder="Search vendor name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="!py-2 bg-surface"
+                className="! bg-surface"
                 containerClassName="!gap-0"
               />
             </div>
@@ -374,7 +383,7 @@ export default function VendorsPage() {
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                className="w-full h-[41px] rounded-lg border border-[var(--border-strong)] bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
+                className="w-full h-[41px] rounded-lg border border-(--border-strong) bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
               >
                 <option value="">All Categories</option>
                 {categories.map((cat) => (
@@ -388,7 +397,7 @@ export default function VendorsPage() {
               <select
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="w-full h-[41px] rounded-lg border border-[var(--border-strong)] bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
+                className="w-full h-[41px] rounded-lg border border-(--border-strong) bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
               >
                 <option value="">All Locations</option>
                 <option value="Pune">Pune</option>
@@ -402,7 +411,7 @@ export default function VendorsPage() {
               <select
                 value={ratingFilter}
                 onChange={(e) => setRatingFilter(e.target.value)}
-                className="w-full h-[41px] rounded-lg border border-[var(--border-strong)] bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
+                className="w-full h-[41px] rounded-lg border border-(--border-strong) bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
               >
                 <option value="">Any Rating</option>
                 <option value="4.0">★ 4.0+ Stars</option>
@@ -414,7 +423,7 @@ export default function VendorsPage() {
             <div className="lg:col-span-3 flex items-center justify-between lg:justify-end gap-2">
               <Button
                 variant="secondary"
-                className="!p-2.5 h-[41px]"
+                className="! h-[41px]"
                 onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
                 title={viewMode === "grid" ? "Switch to List View" : "Switch to Grid View"}
               >
@@ -441,13 +450,13 @@ export default function VendorsPage() {
             </div>
 
             {/* Extra checkboxes */}
-            <div className="lg:col-span-12 flex flex-wrap gap-4 mt-2 pt-2 border-t border-[var(--border)]/40 text-xs">
+            <div className="lg:col-span-12 flex flex-wrap gap-4 mt-2 pt-2 border-t border-(--border)/40 text-xs">
               <label className="flex items-center gap-2 cursor-pointer font-medium select-none">
                 <input
                   type="checkbox"
                   checked={gstVerified}
                   onChange={(e) => setGstVerified(e.target.checked)}
-                  className="rounded border-[var(--border-strong)] text-accent focus:ring-accent/20 h-4 w-4"
+                  className="rounded border-(--border-strong) text-accent focus:ring-accent/20 h-4 w-4"
                 />
                 <span>GST Verified Only</span>
               </label>
@@ -456,7 +465,7 @@ export default function VendorsPage() {
                   type="checkbox"
                   checked={premiumOnly}
                   onChange={(e) => setPremiumOnly(e.target.checked)}
-                  className="rounded border-[var(--border-strong)] text-accent focus:ring-accent/20 h-4 w-4"
+                  className="rounded border-(--border-strong) text-accent focus:ring-accent/20 h-4 w-4"
                 />
                 <span>Premium Badged Vendors</span>
               </label>
@@ -475,7 +484,7 @@ export default function VendorsPage() {
               <span className="h-10 w-10 animate-spin rounded-full border-4 border-accent border-t-transparent" />
             </div>
           ) : vendors.length === 0 ? (
-            <div className="text-center py-16 bg-surface border border-[var(--border)] rounded-2xl">
+            <div className="text-center py-16 bg-surface border border-(--border) rounded-2xl">
               <IoStorefront className="text-5xl text-muted mx-auto mb-3" />
               <h3 className="font-bold text-lg">No vendors matched your filters</h3>
               <p className="text-sm text-muted mt-1">Try resetting search query or filtering parameters.</p>
@@ -491,17 +500,17 @@ export default function VendorsPage() {
                     key={vendor.id}
                     delay={idx * 0.04}
                     accent={vendor.premium}
-                    className="flex flex-col relative overflow-hidden group hover:shadow-md transition-all border-[var(--border)] border"
+                    className="flex flex-col relative overflow-hidden group hover:shadow-md transition-all border-(--border) border"
                   >
                     {/* Header Image Cover */}
                     <div className="h-28 -mx-5 -mt-5 relative overflow-hidden bg-stone-200">
                       {vendor.banner_url ? (
                         <img src={vendor.banner_url} alt="Cover" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-r from-amber-500/20 to-orange-500/20" />
+                        <div className="w-full h-full bg-linear-to- from-amber-500/20 to-orange-500/20" />
                       )}
                       {vendor.premium && (
-                        <span className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-[9px] px-2 py-0.5 rounded shadow-sm tracking-wider uppercase">
+                        <span className="absolute top-3 right-3 bg-linear-to- from-amber-500 to-orange-500 text-white font-bold text-[9px] px-2 py-0.5 rounded shadow-sm tracking-wider uppercase">
                           PREMIUM
                         </span>
                       )}
@@ -525,7 +534,7 @@ export default function VendorsPage() {
                             {vendor.company_name}
                           </h3>
                           {vendor.is_approved && (
-                            <Badge color="emerald" showDot={false} className="!px-1 py-0 text-[9px]">Verified</Badge>
+                            <Badge color="emerald" showDot={false} className="! py-0 text-[9px]">Verified</Badge>
                           )}
                         </div>
                         <p className="text-[10px] text-muted font-medium">{vendor.industry} · {vendor.city}</p>
@@ -563,13 +572,13 @@ export default function VendorsPage() {
                     </div>
 
                     {/* Actions Panel */}
-                    <div className="flex gap-2 pt-3 border-t border-[var(--border)]/40 mt-auto">
+                    <div className="flex gap-2 pt-3 border-t border-(--border)/40 mt-auto">
                       {isAdminOrProcurement && (
                         <input
                           type="checkbox"
                           checked={selectedForBulk}
                           onChange={() => toggleSelectVendorForBulk(vendor.id)}
-                          className="mr-1 rounded border-[var(--border-strong)] text-accent focus:ring-accent/20 h-5 w-5 self-center cursor-pointer"
+                          className="mr-1 rounded border-(--border-strong) text-accent focus:ring-accent/20 h-5 w-5 self-center cursor-pointer"
                           title="Select for Bulk Assignment"
                         />
                       )}
@@ -587,7 +596,7 @@ export default function VendorsPage() {
                         <Button
                           variant="secondary"
                           size="sm"
-                          className="!p-2"
+                          className="!"
                           onClick={() => { setSelectedVendor(vendor); setSelectedEmployeeId(""); setAssignModalOpen(true); }}
                           title="Assign to Agent/Pipeline"
                         >
@@ -606,7 +615,7 @@ export default function VendorsPage() {
 
                       <button
                         onClick={() => toggleBookmark(vendor.id)}
-                        className="p-2 rounded-lg border border-[var(--border-strong)] hover:bg-accent-muted text-muted hover:text-accent transition-colors"
+                        className="p-2 rounded-lg border border-(--border-strong) hover:bg-accent-muted text-muted hover:text-accent transition-colors"
                       >
                         {bookmarked ? <IoBookmark className="text-accent text-sm" /> : <IoBookmarkOutline className="text-sm" />}
                       </button>
@@ -617,10 +626,10 @@ export default function VendorsPage() {
             </div>
           ) : (
             /* List View */
-            <div className="bg-surface rounded-xl border border-[var(--border)] overflow-hidden">
+            <div className="bg-surface rounded-xl border border-(--border) overflow-hidden">
               <table className="w-full text-sm text-left">
                 <thead>
-                  <tr className="border-b border-[var(--border)] bg-stone-50 dark:bg-stone-900/20 text-xs font-semibold uppercase text-muted">
+                  <tr className="border-b border-(--border) bg-stone-50 dark:bg-stone-900/20 text-xs font-semibold uppercase text-muted">
                     {isAdminOrProcurement && <th className="px-4 py-3 w-10"></th>}
                     <th className="px-4 py-3">Company</th>
                     <th className="px-4 py-3">Industry</th>
@@ -635,14 +644,14 @@ export default function VendorsPage() {
                   {vendors.map((vendor) => {
                     const selectedForBulk = selectedVendors.includes(vendor.id);
                     return (
-                      <tr key={vendor.id} className="border-b border-[var(--border)] last:border-0 hover:bg-stone-50/50 dark:hover:bg-stone-900/10">
+                      <tr key={vendor.id} className="border-b border-(--border) last:border-0 hover:bg-stone-50/50 dark:hover:bg-stone-900/10">
                         {isAdminOrProcurement && (
                           <td className="px-4 py-3">
                             <input
                               type="checkbox"
                               checked={selectedForBulk}
                               onChange={() => toggleSelectVendorForBulk(vendor.id)}
-                              className="rounded border-[var(--border-strong)] text-accent h-4 w-4 cursor-pointer"
+                              className="rounded border-(--border-strong) text-accent h-4 w-4 cursor-pointer"
                             />
                           </td>
                         )}
@@ -673,7 +682,7 @@ export default function VendorsPage() {
                           <div className="flex items-center justify-end gap-1.5">
                             <Button size="sm" variant="secondary" onClick={() => router.push(`/vendors/${vendor.id}`)}>Profile</Button>
                             {isAdminOrProcurement && (
-                              <Button size="sm" variant="secondary" className="!p-1.5" onClick={() => { setSelectedVendor(vendor); setSelectedEmployeeId(""); setAssignModalOpen(true); }} title="Assign Vendor"><IoPersonAdd /></Button>
+                              <Button size="sm" variant="secondary" className="!" onClick={() => { setSelectedVendor(vendor); setSelectedEmployeeId(""); setAssignModalOpen(true); }} title="Assign Vendor"><IoPersonAdd /></Button>
                             )}
                             <Button size="sm" onClick={() => { setSelectedVendor(vendor); setSelectedRfqId(rfqs[0]?.id || ""); setRfqModalOpen(true); }}>Invite</Button>
                           </div>
@@ -708,7 +717,7 @@ export default function VendorsPage() {
               {/* Vendor Relations Grid */}
               <h2 className="text-lg font-bold mb-4">My Relationships ({myVendors.length})</h2>
               {myVendors.length === 0 ? (
-                <div className="text-center py-16 bg-surface border border-[var(--border)] rounded-2xl">
+                <div className="text-center py-16 bg-surface border border-(--border) rounded-2xl">
                   <IoBriefcase className="text-5xl text-muted mx-auto mb-3" />
                   <h3 className="font-bold text-lg">No assigned vendors</h3>
                   <p className="text-sm text-muted mt-1">Assign vendors from the Vendor Directory tab to track them here.</p>
@@ -716,7 +725,7 @@ export default function VendorsPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {myVendors.map((vendor, idx) => (
-                    <Card key={vendor.id} delay={idx * 0.05} className="border border-[var(--border)] hover:shadow-sm">
+                    <Card key={vendor.id} delay={idx * 0.05} className="border border-(--border) hover:shadow-sm">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
                           <div className="h-12 w-12 rounded-lg border border-stone-200 bg-white overflow-hidden flex items-center justify-center">
@@ -740,7 +749,7 @@ export default function VendorsPage() {
                         </Badge>
                       </div>
 
-                      <div className="space-y-2 text-xs border-y border-[var(--border)]/40 py-3 mb-4">
+                      <div className="space-y-2 text-xs border-y border-(--border)/40 py-3 mb-4">
                         <div className="flex justify-between">
                           <span className="text-muted">Contact Person</span>
                           <span className="font-medium text-foreground">{vendor.contact_person}</span>
@@ -758,7 +767,7 @@ export default function VendorsPage() {
                       {/* Relationship actions */}
                       <div className="flex gap-2">
                         <Button variant="secondary" size="sm" className="flex-1 text-[11px]" onClick={() => router.push(`/vendors/${vendor.id}`)}>View Profile</Button>
-                        <Button variant="secondary" size="sm" className="!p-2 text-accent" onClick={() => startChat(vendor)} title="Simulate Messages"><IoChatboxEllipses className="text-sm" /></Button>
+                        <Button variant="secondary" size="sm" className="! text-accent" onClick={() => startChat(vendor)} title="Simulate Messages"><IoChatboxEllipses className="text-sm" /></Button>
                         <Button variant="primary" size="sm" className="flex-1 text-[11px]" onClick={() => router.push(`/rfq/create?vendor=${vendor.id}`)}>Create RFQ</Button>
                       </div>
                     </Card>
@@ -801,7 +810,7 @@ export default function VendorsPage() {
               });
 
               return (
-                <div key={col.id} className="w-80 shrink-0 bg-stone-50 dark:bg-stone-900/40 rounded-xl p-3 border border-[var(--border)]/60 flex flex-col">
+                <div key={col.id} className="w-80 shrink-0 bg-stone-50 dark:bg-stone-900/40 rounded-xl p-3 border border-(--border)/60 flex flex-col">
                   {/* Column Header */}
                   <div className="flex items-center justify-between mb-3 px-1">
                     <div className="flex items-center gap-2">
@@ -832,7 +841,7 @@ export default function VendorsPage() {
                         return (
                           <div
                             key={vendor.id}
-                            className="bg-surface rounded-lg p-3 border border-[var(--border)]/70 shadow-sm relative group hover:border-accent/50 transition-colors"
+                            className="bg-surface rounded-lg p-3 border border-(--border)/70 shadow-sm relative group hover:border-accent/50 transition-colors"
                           >
                             {/* Logo + Company */}
                             <div className="flex items-center gap-2 mb-2">
@@ -861,7 +870,7 @@ export default function VendorsPage() {
                             </div>
 
                             {/* Move controls simulator */}
-                            <div className="flex justify-between items-center pt-2 border-t border-[var(--border)]/20 mt-2">
+                            <div className="flex justify-between items-center pt-2 border-t border-(--border)/20 mt-2">
                               {/* Move Left */}
                               <button
                                 disabled={col.id === "assigned"}
@@ -922,7 +931,7 @@ export default function VendorsPage() {
           <Input label="PAN Number" value={form.pan_number} onChange={(e) => setForm({ ...form, pan_number: e.target.value })} />
           <div className="sm:col-span-2 space-y-2">
             <label className="text-sm font-semibold text-foreground/80 block">Vendor Categories</label>
-            <div className="flex flex-wrap gap-2 border border-[var(--border-strong)] p-3 rounded-lg bg-surface">
+            <div className="flex flex-wrap gap-2 border border-(--border-strong) p-3 rounded-lg bg-surface">
               {categories.map((cat) => {
                 const selected = form.category.includes(cat);
                 return (
@@ -953,7 +962,7 @@ export default function VendorsPage() {
           </div>
           <Input label="Business Description / About" type="textarea" placeholder="Detail the business operations, machinery, etc." value={form.about} onChange={(e) => setForm({ ...form, about: e.target.value })} containerClassName="sm:col-span-2" />
           
-          <div className="sm:col-span-2 flex items-center gap-4 bg-stone-50 dark:bg-stone-900/60 p-3 rounded-lg border border-[var(--border)]">
+          <div className="sm:col-span-2 flex items-center gap-4 bg-stone-50 dark:bg-stone-900/60 p-3 rounded-lg border border-(--border)">
             <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold select-none">
               <input
                 type="checkbox"
@@ -975,7 +984,7 @@ export default function VendorsPage() {
       <Modal open={assignModalOpen} onClose={() => setAssignModalOpen(false)} title="Assign Vendor to Agent/Pipeline" size="md">
         {selectedVendor && (
           <div className="space-y-4">
-            <div className="p-3 bg-stone-50 dark:bg-stone-900/60 rounded-lg border border-[var(--border)] flex items-center gap-3">
+            <div className="p-3 bg-stone-50 dark:bg-stone-900/60 rounded-lg border border-(--border) flex items-center gap-3">
               <div className="h-10 w-10 bg-white rounded border overflow-hidden flex items-center justify-center">
                 <img src={selectedVendor.logo_url} alt="" className="object-cover h-full w-full" />
               </div>
@@ -990,7 +999,7 @@ export default function VendorsPage() {
               <select
                 value={selectedEmployeeId}
                 onChange={(e) => setSelectedEmployeeId(e.target.value)}
-                className="w-full h-10 rounded-lg border border-[var(--border-strong)] bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
+                className="w-full h-10 rounded-lg border border-(--border-strong) bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
               >
                 <option value="">Choose Employee...</option>
                 {employees.map(emp => (
@@ -1004,7 +1013,7 @@ export default function VendorsPage() {
               <select
                 value={assignmentStatus}
                 onChange={(e) => setAssignmentStatus(e.target.value)}
-                className="w-full h-10 rounded-lg border border-[var(--border-strong)] bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
+                className="w-full h-10 rounded-lg border border-(--border-strong) bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
               >
                 {kanbanColumns.map(col => (
                   <option key={col.id} value={col.id}>{col.label}</option>
@@ -1023,7 +1032,7 @@ export default function VendorsPage() {
       <Modal open={rfqModalOpen} onClose={() => setRfqModalOpen(false)} title="Invite Vendor to RFQ" size="md">
         {selectedVendor && (
           <div className="space-y-4">
-            <div className="p-3 bg-stone-50 dark:bg-stone-900/60 rounded-lg border border-[var(--border)] flex items-center gap-3">
+            <div className="p-3 bg-stone-50 dark:bg-stone-900/60 rounded-lg border border-(--border) flex items-center gap-3">
               <div className="h-10 w-10 bg-white rounded border overflow-hidden flex items-center justify-center">
                 <img src={selectedVendor.logo_url} alt="" className="object-cover h-full w-full" />
               </div>
@@ -1038,7 +1047,7 @@ export default function VendorsPage() {
               <select
                 value={selectedRfqId}
                 onChange={(e) => setSelectedRfqId(e.target.value)}
-                className="w-full h-10 rounded-lg border border-[var(--border-strong)] bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
+                className="w-full h-10 rounded-lg border border-(--border-strong) bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
               >
                 <option value="">Choose RFQ...</option>
                 {rfqs.filter(r => r.status === 'sent').map(r => (
@@ -1066,7 +1075,7 @@ export default function VendorsPage() {
             <select
               value={selectedEmployeeId}
               onChange={(e) => setSelectedEmployeeId(e.target.value)}
-              className="w-full h-10 rounded-lg border border-[var(--border-strong)] bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
+              className="w-full h-10 rounded-lg border border-(--border-strong) bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
             >
               <option value="">Choose Employee...</option>
               {employees.map(emp => (
@@ -1102,13 +1111,13 @@ export default function VendorsPage() {
             </div>
 
             {/* Input Bar */}
-            <form onSubmit={sendChatMessage} className="flex gap-2 pt-3 border-t border-[var(--border)] mt-auto">
+            <form onSubmit={sendChatMessage} className="flex gap-2 pt-3 border-t border-(--border) mt-auto">
               <input
                 type="text"
                 placeholder="Ask about catalogs, logistics details, discounts..."
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
-                className="flex-1 rounded-lg border border-[var(--border-strong)] bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+                className="flex-1 rounded-lg border border-(--border-strong) bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
               />
               <Button type="submit" icon={IoSend} className="px-4">Send</Button>
             </form>
@@ -1136,7 +1145,7 @@ export default function VendorsPage() {
               value={newCatName}
               onChange={(e) => setNewCatName(e.target.value)}
               containerClassName="flex-1 !gap-0"
-              className="!py-2 bg-surface"
+              className="! bg-surface"
               required
             />
             <Button type="submit" icon={IoAdd} className="px-4">Add</Button>

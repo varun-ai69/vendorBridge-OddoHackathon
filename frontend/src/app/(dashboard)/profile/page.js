@@ -44,7 +44,7 @@ const getPlatformConfig = (url) => {
     return { name: "Facebook", icon: IoLogoFacebook, color: "bg-[#1877f2] text-white", brandColor: "#1877f2" };
   }
   if (lower.includes("instagram.com")) {
-    return { name: "Instagram", icon: IoLogoInstagram, color: "bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white", brandColor: "#ee2a7b" };
+    return { name: "Instagram", icon: IoLogoInstagram, color: "bg-linear-to-r from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white", brandColor: "#ee2a7b" };
   }
   if (lower.includes("youtube.com") || lower.includes("youtu.be")) {
     return { name: "YouTube", icon: IoLogoYoutube, color: "bg-[#ff0000] text-white", brandColor: "#ff0000" };
@@ -301,13 +301,13 @@ export default function ProfilePage() {
       </div>
 
       {/* Hero Section */}
-      <div className="relative rounded-2xl border border-[var(--border)] bg-surface overflow-hidden shadow-sm mb-6">
+      <div className="relative rounded-2xl border border-(--border) bg-surface overflow-hidden shadow-sm mb-6">
         {/* Banner cover */}
         <div className="h-44 md:h-56 relative w-full bg-stone-200">
           {vendor?.banner_url ? (
             <img src={vendor.banner_url} alt="" className="w-full h-full object-cover" />
           ) : (
-            <div className="w-full h-full bg-gradient-to-r from-amber-500/10 to-orange-500/10" />
+            <div className="w-full h-full bg-linear-to- from-amber-500/10 to-orange-500/10" />
           )}
           <button
             onClick={() => triggerFileUpload(2, "banner")}
@@ -343,7 +343,7 @@ export default function ProfilePage() {
                   <Badge color="emerald" showDot={false} className="flex items-center gap-1"><IoShieldCheckmark className="text-sm" /> Approved</Badge>
                 )}
                 {vendor?.premium && (
-                  <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-[9px] px-2 py-0.5 rounded shadow-sm">PREMIUM PARTNER</span>
+                  <span className="bg-linear-to- from-amber-500 to-orange-500 text-white font-bold text-[9px] px-2 py-0.5 rounded shadow-sm">PREMIUM PARTNER</span>
                 )}
               </div>
               <p className="text-sm text-muted mt-1 italic">&quot;{vendor?.tagline || "Quality supplier partner."}&quot;</p>
@@ -359,7 +359,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Quick stats grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 border-t border-[var(--border)] text-center divide-x divide-[var(--border)] py-4 bg-stone-50/50 dark:bg-stone-900/10">
+        <div className="grid grid-cols-2 md:grid-cols-4 border-t border-(--border) text-center divide-x divide-(--border) py-4 bg-stone-50/50 dark:bg-stone-900/10">
           <div>
             <span className="text-[10px] text-muted uppercase font-bold tracking-wider">Completed RFQs</span>
             <p className="text-xl font-bold text-foreground mt-1">{analytics?.rfqs_completed || 0}</p>
@@ -380,7 +380,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-[var(--border)] overflow-x-auto pb-px mb-6 scrollbar-none">
+      <div className="flex gap-2 border-b border-(--border) overflow-x-auto pb-px mb-6 scrollbar-none">
         {[
           { id: "overview", label: "Overview Specs" },
           { id: "products", label: "Product Showcase Catalog" },
@@ -407,7 +407,7 @@ export default function ProfilePage() {
       {activeTab === "overview" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-8 space-y-6">
-            <Card className="border border-[var(--border)]">
+            <Card className="border border-(--border)">
               <h3 className="font-bold text-lg mb-3">About the Company</h3>
               <p className="text-sm leading-relaxed text-foreground/80 whitespace-pre-line">
                 {vendor?.about || "Enter detailed company description in edit profile details."}
@@ -415,7 +415,7 @@ export default function ProfilePage() {
             </Card>
 
             {/* Smart Links Section */}
-            <Card className="border border-[var(--border)]">
+            <Card className="border border-(--border)">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-lg">Smart Social Cards</h3>
                 <span className="text-xs text-muted">Auto-detecting Links</span>
@@ -427,7 +427,7 @@ export default function ProfilePage() {
                   value={newLinkUrl}
                   onChange={(e) => setNewLinkUrl(e.target.value)}
                   containerClassName="flex-1 !gap-0"
-                  className="!py-2 bg-surface"
+                  className="! bg-surface"
                 />
                 <Button type="submit" loading={addingLink} className="px-5">Add Link</Button>
               </form>
@@ -473,7 +473,7 @@ export default function ProfilePage() {
 
           {/* Details Sidebar */}
           <div className="lg:col-span-4">
-            <Card className="border border-[var(--border)]">
+            <Card className="border border-(--border)">
               <h3 className="font-bold text-sm text-muted uppercase tracking-wider mb-4">Corporate Specifications</h3>
               
               <div className="space-y-4 text-xs font-semibold">
@@ -533,7 +533,7 @@ export default function ProfilePage() {
           </div>
 
           {products.length === 0 ? (
-            <div className="text-center py-16 bg-surface border border-[var(--border)] rounded-2xl">
+            <div className="text-center py-16 bg-surface border border-(--border) rounded-2xl">
               <IoCart className="text-5xl text-muted mx-auto mb-3" />
               <h3 className="font-bold text-lg">No showcased products</h3>
               <p className="text-sm text-muted mt-1">Upload products to display them to procurement agents.</p>
@@ -541,7 +541,7 @@ export default function ProfilePage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((prod) => (
-                <Card key={prod.id} className="border border-[var(--border)] flex flex-col group overflow-hidden hover:shadow-md transition-shadow relative">
+                <Card key={prod.id} className="border border-(--border) flex flex-col group overflow-hidden hover:shadow-md transition-shadow relative">
                   {/* Delete button overlay */}
                   <button
                     onClick={() => handleDeleteProduct(prod.id)}
@@ -551,7 +551,7 @@ export default function ProfilePage() {
                     <IoTrash className="text-sm" />
                   </button>
 
-                  <div className="h-44 -mx-5 -mt-5 relative overflow-hidden bg-stone-100 flex items-center justify-center border-b border-[var(--border)]">
+                  <div className="h-44 -mx-5 -mt-5 relative overflow-hidden bg-stone-100 flex items-center justify-center border-b border-(--border)">
                     {prod.images?.[0] ? (
                       <img src={prod.images[0]} alt={prod.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     ) : (
@@ -584,12 +584,12 @@ export default function ProfilePage() {
       {/* ─── TAB 3: MEDIA UPLOADER ─── */}
       {activeTab === "media" && (
         <div className="space-y-6">
-          <Card className="border border-[var(--border)]">
+          <Card className="border border-(--border)">
             <h3 className="font-bold text-lg mb-4">Branding Asset Management</h3>
             
             <div
               onClick={() => triggerFileUpload(1.5, "gallery")}
-              className="border-2 border-dashed border-[var(--border-strong)] hover:border-accent hover:bg-accent-muted/20 cursor-pointer rounded-xl p-8 text-center transition-all"
+              className="border-2 border-dashed border-(--border-strong) hover:border-accent hover:bg-accent-muted/20 cursor-pointer rounded-xl p-8 text-center transition-all"
             >
               <IoCloudUpload className="text-5xl text-accent mx-auto mb-3" />
               <h4 className="font-bold text-sm">Upload new images to your gallery</h4>
@@ -598,13 +598,13 @@ export default function ProfilePage() {
             </div>
           </Card>
 
-          <Card className="border border-[var(--border)]">
+          <Card className="border border-(--border)">
             <h3 className="font-bold text-lg mb-4">Office & Factory Gallery</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {uploadedPhotos.map((photo) => (
                 <div key={photo.id} className="group relative rounded-xl border border-stone-200 overflow-hidden bg-stone-50 aspect-square">
                   <img src={photo.url} alt={photo.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 flex flex-col justify-end p-2.5 transition-opacity duration-300">
+                  <div className="absolute inset-0 bg-linear-to- from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 flex flex-col justify-end p-2.5 transition-opacity duration-300">
                     <span className="text-[10px] font-bold text-white truncate block">{photo.name}</span>
                     <button
                       onClick={() => setUploadedPhotos(uploadedPhotos.filter(p => p.id !== photo.id))}
@@ -625,7 +625,7 @@ export default function ProfilePage() {
       {activeTab === "performance" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-4 space-y-6">
-            <Card className="border border-[var(--border)]">
+            <Card className="border border-(--border)">
               <h3 className="font-bold text-lg mb-4">Rating Index Breakdown</h3>
 
               <div className="space-y-4">
@@ -651,7 +651,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="lg:col-span-8">
-            <Card className="border border-[var(--border)]">
+            <Card className="border border-(--border)">
               <h3 className="font-bold text-lg mb-4">Performance Quality Trend (Jan - Jun)</h3>
 
               <ResponsiveContainer width="100%" height={290}>
@@ -678,7 +678,7 @@ export default function ProfilePage() {
 
       {/* ─── TAB 5: TIMELINE ─── */}
       {activeTab === "timeline" && (
-        <Card className="border border-[var(--border)] max-w-3xl mx-auto">
+        <Card className="border border-(--border) max-w-3xl mx-auto">
           <h3 className="font-bold text-lg mb-6">Interaction Timeline History</h3>
 
           {!timeline || timeline.length === 0 ? (
@@ -689,7 +689,7 @@ export default function ProfilePage() {
             <div className="relative border-l border-stone-200 dark:border-stone-850 pl-5 ml-2 space-y-6">
               {timeline.map((item, idx) => (
                 <div key={item.id || idx} className="relative">
-                  <span className="absolute -left-[29px] top-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-white shadow ring-4 ring-white dark:ring-stone-950 text-[9px] shrink-0 font-bold">
+                  <span className="absolute left-[-29px] top-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-white shadow ring-4 ring-white dark:ring-stone-950 text-[9px] shrink-0 font-bold">
                     ✓
                   </span>
                   
@@ -736,7 +736,7 @@ export default function ProfilePage() {
           
           <div className="sm:col-span-2 space-y-2">
             <label className="text-xs font-semibold text-foreground/80 block">Vendor Categories</label>
-            <div className="flex flex-wrap gap-2 border border-[var(--border-strong)] p-3 rounded-lg bg-surface">
+            <div className="flex flex-wrap gap-2 border border-(--border-strong) p-3 rounded-lg bg-surface">
               {categories.map((cat) => {
                 const selected = editForm.category?.includes(cat) || false;
                 return (
@@ -810,7 +810,7 @@ export default function ProfilePage() {
             <select
               value={newProductForm.category}
               onChange={(e) => setNewProductForm({ ...newProductForm, category: e.target.value })}
-              className="w-full h-10 rounded-lg border border-[var(--border-strong)] bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
+              className="w-full h-10 rounded-lg border border-(--border-strong) bg-surface px-3 text-sm text-foreground focus:border-accent focus:outline-none"
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>

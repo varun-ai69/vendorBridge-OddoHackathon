@@ -19,7 +19,7 @@ const Input = forwardRef(function Input(
         <input
           ref={ref}
           className={clsx(
-            "w-full rounded-lg border border-[var(--border-strong)] bg-surface px-3 py-2.5 text-sm text-foreground placeholder:text-muted transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20",
+            "w-full rounded-lg border border-(--border-strong) bg-surface px-3 py-2.5 text-sm text-foreground placeholder:text-muted transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20",
             Icon && "pl-10",
             error && "border-danger focus:border-danger focus:ring-danger/20",
             className
