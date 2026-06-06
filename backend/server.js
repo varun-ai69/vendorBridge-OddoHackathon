@@ -12,6 +12,9 @@ const authRoutes = require("./routes/auth.routes");
 const orgRoutes = require("./routes/org.routes");
 const userRoutes = require("./routes/user.routes");
 const vendorRoutes = require("./routes/vendor.routes");
+const rfqRoutes = require("./routes/rfq.routes");
+const quotationRoutes = require("./routes/quotation.routes");
+const approvalRoutes = require("./routes/approval.routes");
 
 const PORT = process.env.PORT || 5000;
 
@@ -27,6 +30,9 @@ const startServer = async () => {
     app.use("/api/v1/org", orgRoutes);
     app.use("/api/v1/admin/users", userRoutes);
     app.use("/api/v1", vendorRoutes);
+    app.use("/api/v1", rfqRoutes);
+    app.use("/api/v1", quotationRoutes);
+    app.use("/api/v1", approvalRoutes);
 
     // Global Error Handler
     app.use(errorHandler);
