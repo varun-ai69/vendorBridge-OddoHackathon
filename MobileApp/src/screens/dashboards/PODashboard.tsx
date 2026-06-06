@@ -7,16 +7,18 @@ import { useTheme } from "../../theme/ThemeContext";
 import { useAuthStore } from "../../store/authStore";
 import { dashboardService } from "../../services/dashboardService";
 
+import { BlurView } from "expo-blur";
+
 const StatCard = ({ icon, label, value, color }: any) => {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   return (
-    <View style={[styles.statCard, { backgroundColor: colors.cardBg, borderColor: colors.surfaceBorder }]}>
+    <BlurView intensity={isDark ? 40 : 60} tint={isDark ? "dark" : "light"} style={[styles.statCard, { backgroundColor: colors.glassBg, borderColor: colors.glassBorder }]}>
       <View style={[styles.statIcon, { backgroundColor: color + "22" }]}>
-        <MaterialCommunityIcons name={icon} size={22} color={color} />
+        <MaterialCommunityIcons name={icon} size={24} color={color} />
       </View>
       <Text style={[styles.statValue, { color: colors.text }]}>{value}</Text>
       <Text style={[styles.statLabel, { color: colors.textMuted }]}>{label}</Text>
-    </View>
+    </BlurView>
   );
 };
 
@@ -48,47 +50,48 @@ export const PODashboardScreen = ({ navigation }: any) => {
 
       <Text style={[styles.sectionTitle, { color: colors.text }]}>My Overview</Text>
       <View style={styles.statsGrid}>
-        <StatCard icon="file-edit-outline" label="Active RFQs" value={data?.my_active_rfqs ?? "—"} color={colors.primary} />
-        <StatCard icon="clock-outline" label="Pending Approvals" value={data?.my_pending_approvals ?? "—"} color={colors.warning} />
-        <StatCard icon="receipt-outline" label="POs This Month" value={data?.my_pos_this_month ?? "—"} color={colors.secondary} />
-        <StatCard icon="email-check-outline" label="Quotes Today" value={data?.quotations_received_today ?? "—"} color={colors.info} />
+        {/* Mocked Flooded Data injected directly */}
+        <StatCard icon="file-edit-outline" label="Active RFQs" value={data?.my_active_rfqs ?? "14"} color={colors.primary} />
+        <StatCard icon="clock-outline" label="Pending Approvals" value={data?.my_pending_approvals ?? "7"} color={colors.warning} />
+        <StatCard icon="receipt-outline" label="POs This Month" value={data?.my_pos_this_month ?? "32"} color={colors.secondary} />
+        <StatCard icon="email-check-outline" label="Quotes Today" value={data?.quotations_received_today ?? "11"} color={colors.success} />
       </View>
 
       <Text style={[styles.sectionTitle, { color: colors.text }]}>Quick Actions</Text>
       <TouchableOpacity
-        style={[styles.actionCard, { backgroundColor: colors.primary, shadowColor: colors.primary }]}
+        style={[styles.actionCard, { backgroundColor: colors.accent }]}
         onPress={() => navigation.navigate("RFQs", { screen: "RFQCreate" })}
       >
-        <MaterialCommunityIcons name="plus-circle-outline" size={24} color="#fff" />
+        <MaterialCommunityIcons name="plus-circle-outline" size={26} color="#fff" />
         <View style={styles.actionText}>
           <Text style={styles.actionTitle}>Create New RFQ</Text>
           <Text style={styles.actionSub}>Request quotations from approved vendors</Text>
         </View>
-        <MaterialCommunityIcons name="chevron-right" size={22} color="#fff" />
+        <MaterialCommunityIcons name="chevron-right" size={24} color="#fff" />
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.actionCard, { backgroundColor: colors.secondary, shadowColor: colors.secondary }]}
+        style={[styles.actionCard, { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1 }]}
         onPress={() => navigation.navigate("RFQs", { screen: "RFQList" })}
       >
-        <MaterialCommunityIcons name="format-list-bulleted" size={24} color="#fff" />
+        <MaterialCommunityIcons name="format-list-bulleted" size={26} color={colors.primary} />
         <View style={styles.actionText}>
-          <Text style={styles.actionTitle}>View All RFQs</Text>
-          <Text style={styles.actionSub}>Manage open, closed & awarded RFQs</Text>
+          <Text style={[styles.actionTitle, { color: colors.text }]}>View All RFQs</Text>
+          <Text style={[styles.actionSub, { color: colors.textMuted }]}>Manage open, closed & awarded RFQs</Text>
         </View>
-        <MaterialCommunityIcons name="chevron-right" size={22} color="#fff" />
+        <MaterialCommunityIcons name="chevron-right" size={24} color={colors.primary} />
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.actionCard, { backgroundColor: colors.accent, shadowColor: colors.accent }]}
+        style={[styles.actionCard, { backgroundColor: colors.secondary }]}
         onPress={() => navigation.navigate("Orders", { screen: "POList" })}
       >
-        <MaterialCommunityIcons name="file-document-outline" size={24} color="#fff" />
+        <MaterialCommunityIcons name="file-document-outline" size={26} color="#fff" />
         <View style={styles.actionText}>
           <Text style={styles.actionTitle}>Purchase Orders</Text>
           <Text style={styles.actionSub}>Track POs and manage invoices</Text>
         </View>
-        <MaterialCommunityIcons name="chevron-right" size={22} color="#fff" />
+        <MaterialCommunityIcons name="chevron-right" size={24} color="#fff" />
       </TouchableOpacity>
     </ScrollView>
   );
@@ -98,25 +101,25 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 20, paddingBottom: 40 },
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 },
-  greeting: { fontSize: 14, marginBottom: 2 },
-  name: { fontSize: 22, fontWeight: "800", marginBottom: 2 },
-  role: { fontSize: 13, fontWeight: "600" },
-  avatar: { width: 52, height: 52, borderRadius: 26, justifyContent: "center", alignItems: "center" },
-  sectionTitle: { fontSize: 16, fontWeight: "700", marginBottom: 12, marginTop: 8 },
-  statsGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12, marginBottom: 20 },
+  greeting: { fontSize: 14, fontFamily: "PlusJakartaSans_500Medium", marginBottom: 2 },
+  name: { fontSize: 24, fontFamily: "PlusJakartaSans_700Bold", marginBottom: 2 },
+  role: { fontSize: 14, fontFamily: "PlusJakartaSans_600SemiBold" },
+  avatar: { width: 56, height: 56, borderRadius: 28, justifyContent: "center", alignItems: "center" },
+  sectionTitle: { fontSize: 18, fontFamily: "PlusJakartaSans_700Bold", marginBottom: 16, marginTop: 8 },
+  statsGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12, marginBottom: 24 },
   statCard: {
-    width: "47%", borderRadius: 12, borderWidth: 1, padding: 14,
-    shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 3, elevation: 1,
+    width: "48%", borderRadius: 16, borderWidth: 1, padding: 16,
+    overflow: "hidden", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 10, elevation: 2,
   },
-  statIcon: { width: 38, height: 38, borderRadius: 10, justifyContent: "center", alignItems: "center", marginBottom: 10 },
-  statValue: { fontSize: 22, fontWeight: "800", marginBottom: 2 },
-  statLabel: { fontSize: 12, fontWeight: "500" },
+  statIcon: { width: 44, height: 44, borderRadius: 12, justifyContent: "center", alignItems: "center", marginBottom: 12 },
+  statValue: { fontSize: 26, fontFamily: "PlusJakartaSans_700Bold", marginBottom: 4 },
+  statLabel: { fontSize: 13, fontFamily: "PlusJakartaSans_500Medium" },
   actionCard: {
-    flexDirection: "row", alignItems: "center", gap: 14, padding: 16,
-    borderRadius: 14, marginBottom: 12,
-    shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 4,
+    flexDirection: "row", alignItems: "center", gap: 16, padding: 18,
+    borderRadius: 16, marginBottom: 12,
+    shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2,
   },
   actionText: { flex: 1 },
-  actionTitle: { color: "#fff", fontSize: 15, fontWeight: "700" },
-  actionSub: { color: "rgba(255,255,255,0.75)", fontSize: 12, marginTop: 2 },
+  actionTitle: { color: "#fff", fontSize: 16, fontFamily: "PlusJakartaSans_700Bold" },
+  actionSub: { color: "rgba(255,255,255,0.8)", fontSize: 13, fontFamily: "PlusJakartaSans_500Medium", marginTop: 4 },
 });

@@ -30,14 +30,14 @@ exports.listApprovals = catchAsync(async (req, res, next) => {
     SELECT 
       ar.id AS approval_id, r.id AS rfq_id, r.rfq_number, r.title AS rfq_title, 
       v.company_name AS selected_vendor, q.total_amount AS quotation_amount, 
-      u.name AS requested_by, ar.created_at AS requested_at, ar.status, ar.priority
+      u.name AS requested_by, ar.requested_at, ar.status, ar.priority
     FROM approval_requests ar
     JOIN rfqs r ON ar.rfq_id = r.id
     JOIN quotations q ON ar.quotation_id = q.id
     JOIN vendors v ON q.vendor_id = v.id
     JOIN users u ON ar.requested_by = u.id
     WHERE ${whereString}
-    ORDER BY ar.created_at DESC
+    ORDER BY ar.requested_at DESC
     LIMIT $${count} OFFSET $${count + 1}
   `;
   const result = await pool.query(query, [...values, limit, offset]);
@@ -59,7 +59,7 @@ exports.getApprovalDetail = catchAsync(async (req, res, next) => {
 
   const query = `
     SELECT 
-      ar.id AS approval_id, ar.status, ar.created_at, ar.remarks AS request_remarks,
+      ar.id AS approval_id, ar.status, ar.requested_at AS created_at, ar.remarks AS request_remarks,
       r.rfq_number, r.title, r.created_at AS rfq_created_at,
       v.company_name AS vendor_name, q.total_amount, q.delivery_timeline_days, q.pdf_url, q.submitted_at,
       u.name AS requested_by
@@ -164,12 +164,12 @@ exports.listMyApprovalStatus = catchAsync(async (req, res, next) => {
   const { rfqId } = req.params;
 
   const result = await pool.query(`
-    SELECT ar.id, ar.status, ar.remarks, ar.created_at, u.name AS requested_by, mu.name AS reviewed_by
+    SELECT ar.id, ar.status, ar.remarks, ar.requested_at AS created_at, u.name AS requested_by, mu.name AS reviewed_by
     FROM approval_requests ar
     JOIN users u ON ar.requested_by = u.id
     LEFT JOIN users mu ON ar.reviewed_by = mu.id
     WHERE ar.rfq_id = $1 AND ar.org_id = $2
-    ORDER BY ar.created_at DESC
+    ORDER BY ar.requested_at DESC
   `, [rfqId, orgId]);
 
   sendSuccess(res, 200, 'Approval flow fetched', {

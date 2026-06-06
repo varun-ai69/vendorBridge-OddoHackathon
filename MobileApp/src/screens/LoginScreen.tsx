@@ -15,6 +15,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as LocalAuthentication from "expo-local-authentication";
+import { BlurView } from "expo-blur";
 
 import { useTheme } from "../theme/ThemeContext";
 import { useAuthStore, UserRole } from "../store/authStore";
@@ -29,7 +30,7 @@ const schema = yup.object().shape({
 });
 
 export const LoginScreen = ({ navigation }: any) => {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { setAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isBiometricsAvailable, setIsBiometricsAvailable] = useState(false);
@@ -76,19 +77,6 @@ export const LoginScreen = ({ navigation }: any) => {
         authData = response.data;
       }
 
-      // Step 2: Compulsory 2FA Biometric check if device supports it
-      if (isBiometricsAvailable) {
-        const results = await LocalAuthentication.authenticateAsync({
-          promptMessage: `2FA: Verify it's you, ${authData.user.name}`,
-          fallbackLabel: "Cancel",
-          disableDeviceFallback: false,
-        });
-
-        if (!results.success) {
-          throw new Error("Biometric authentication was cancelled or failed. 2FA is required to log in.");
-        }
-      }
-
       // Proceed to dashboard
       await setAuth(authData.token, authData.refresh_token, authData.user);
     } catch (error: any) {
@@ -100,10 +88,10 @@ export const LoginScreen = ({ navigation }: any) => {
 
   const handleDemoSelect = (role: UserRole) => {
     const credentials = {
-      admin: { email: "admin@vendorbridge.com", pass: "admin123" },
-      procurement_officer: { email: "po@vendorbridge.com", pass: "po123" },
-      manager: { email: "manager@vendorbridge.com", pass: "manager123" },
-      vendor: { email: "vendor@vendorbridge.com", pass: "vendor123" },
+      admin: { email: "admin@vendorbridge.com", pass: "Demo@12345" },
+      procurement_officer: { email: "procurement@vendorbridge.com", pass: "Demo@12345" },
+      manager: { email: "manager@vendorbridge.com", pass: "Demo@12345" },
+      vendor: { email: "vendor1@steelsuppliers.com", pass: "Demo@12345" },
     };
 
     const creds = credentials[role];
@@ -116,7 +104,7 @@ export const LoginScreen = ({ navigation }: any) => {
   const getRoleColor = (role: string) => {
     if (role === "admin") return "#3b82f6";
     if (role === "procurement_officer") return colors.primary;
-    if (role === "manager") return colors.secondary;
+    if (role === "manager") return colors.success;
     return colors.accent;
   };
 
@@ -128,13 +116,17 @@ export const LoginScreen = ({ navigation }: any) => {
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <MaterialCommunityIcons name="bridge" size={60} color={colors.primary} />
-          <Text style={[styles.title, { color: colors.text }]}>VendorBridge</Text>
+          <Text style={[styles.title, { color: colors.text }]}>Vendorland</Text>
           <Text style={[styles.subtitle, { color: colors.textMuted }]}>
             Procurement & Vendor ERP Portal
           </Text>
         </View>
 
-        <View style={[styles.card, { backgroundColor: colors.cardBg, borderColor: colors.surfaceBorder }]}>
+        <BlurView 
+          intensity={isDark ? 40 : 60} 
+          tint={isDark ? "dark" : "light"} 
+          style={[styles.card, { backgroundColor: colors.glassBg, borderColor: colors.glassBorder }]}
+        >
           {/* Email Input */}
           <View style={styles.inputGroup}>
             <Text style={[styles.label, { color: colors.text }]}>Email Address</Text>
@@ -194,13 +186,13 @@ export const LoginScreen = ({ navigation }: any) => {
 
           <View style={styles.actionRow}>
             <LoadingButton
-              label="Sign In (Requires 2FA Biometrics)"
+              label="Sign In"
               isLoading={isLoading}
               onPress={handleSubmit(handleLogin)}
               buttonStyle={styles.loginBtn}
             />
           </View>
-        </View>
+        </BlurView>
 
         {/* Demo Mode Roles Quick-Select Chips */}
         {isDemoMode && (
@@ -256,38 +248,40 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: "800",
+    fontFamily: "PlusJakartaSans_700Bold",
     marginTop: 12,
   },
   subtitle: {
     fontSize: 14,
+    fontFamily: "PlusJakartaSans_500Medium",
     marginTop: 4,
   },
   card: {
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1,
-    padding: 20,
-    elevation: 3,
+    padding: 24,
+    overflow: "hidden",
+    elevation: 4,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
   },
   inputGroup: {
     marginBottom: 20,
   },
   label: {
     fontSize: 14,
-    fontWeight: "600",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderRadius: 8,
-    height: 48,
-    paddingHorizontal: 12,
+    borderRadius: 12,
+    height: 52,
+    paddingHorizontal: 16,
   },
   inputIcon: {
     marginRight: 10,
@@ -295,12 +289,13 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
+    fontFamily: "PlusJakartaSans_400Regular",
     height: "100%",
   },
   errorText: {
     fontSize: 12,
+    fontFamily: "PlusJakartaSans_500Medium",
     marginTop: 4,
-    fontWeight: "500",
   },
   forgotBtn: {
     alignSelf: "flex-end",
@@ -308,7 +303,7 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     fontSize: 14,
-    fontWeight: "600",
+    fontFamily: "PlusJakartaSans_600SemiBold",
   },
   actionRow: {
     flexDirection: "row",
@@ -316,7 +311,8 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     flex: 1,
-    height: 48,
+    height: 52,
+    borderRadius: 12,
   },
   biometricsBtn: {
     width: 48,
@@ -333,7 +329,7 @@ const styles = StyleSheet.create({
   },
   demoTitle: {
     fontSize: 13,
-    fontWeight: "600",
+    fontFamily: "PlusJakartaSans_600SemiBold",
     textTransform: "uppercase",
     letterSpacing: 1,
     marginBottom: 12,
@@ -345,8 +341,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   demoChip: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 20,
     elevation: 1,
     shadowColor: "#000",
@@ -356,7 +352,7 @@ const styles = StyleSheet.create({
   },
   demoChipText: {
     color: "#ffffff",
-    fontWeight: "700",
+    fontFamily: "PlusJakartaSans_700Bold",
     fontSize: 12,
   },
 });

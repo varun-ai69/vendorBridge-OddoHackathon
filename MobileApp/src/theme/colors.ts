@@ -1,37 +1,51 @@
 export const lightThemeColors = {
-  primary: "#4f46e5", // Indigo
-  primaryDark: "#3730a3",
-  secondary: "#0d9488", // Teal
-  accent: "#f59e0b", // Amber
-  background: "#f8fafc", // Cool Slate white
-  surface: "#ffffff",
-  surfaceBorder: "#e2e8f0",
-  text: "#0f172a", // Dark Slate
-  textMuted: "#64748b",
-  success: "#10b981", // Emerald
-  warning: "#f59e0b",
-  danger: "#ef4444",
-  info: "#0ea5e9",
-  cardBg: "#ffffff",
-  shadowColor: "#0f172a",
+  background: '#fdfbf7',
+  foreground: '#1e1d19',
+  surface: '#ffffff',
+  surfaceElevated: 'rgba(255, 255, 255, 0.75)',
+  border: 'rgba(180, 83, 9, 0.08)',
+  borderStrong: 'rgba(180, 83, 9, 0.16)',
+  muted: '#78716c',
+  textMuted: '#78716c',
+  text: '#1e1d19',
+  accent: '#b45309',
+  accentHover: '#92400e',
+  accentMuted: 'rgba(180, 83, 9, 0.07)',
+  success: '#16a34a',
+  warning: '#ca8a04',
+  danger: '#dc2626',
+  glassBg: 'rgba(253, 251, 247, 0.65)',
+  glassBorder: 'rgba(180, 83, 9, 0.08)',
+  primary: '#b45309',
+  secondary: '#0d9488',
+  info: '#0ea5e9',
+  surfaceBorder: 'rgba(180, 83, 9, 0.08)',
+  cardBg: 'rgba(253, 251, 247, 0.65)'
 };
 
 export const darkThemeColors = {
-  primary: "#6366f1", // Light Indigo
-  primaryDark: "#4f46e5",
-  secondary: "#14b8a6", // Teal
-  accent: "#fbbf24", // Amber
-  background: "#0f172a", // Obsidian dark
-  surface: "#1e293b", // Slate surface
-  surfaceBorder: "#334155",
-  text: "#f8fafc", // Cool Slate white text
-  textMuted: "#94a3b8",
-  success: "#34d399", // Emerald light
-  warning: "#fbbf24",
-  danger: "#f87171",
-  info: "#38bdf8",
-  cardBg: "#1e293b",
-  shadowColor: "#000000",
+  background: '#13100c',
+  foreground: '#f5ede0',
+  surface: '#1c1813',
+  surfaceElevated: 'rgba(28, 24, 19, 0.8)',
+  border: 'rgba(245, 238, 224, 0.08)',
+  borderStrong: 'rgba(245, 238, 224, 0.16)',
+  muted: '#9a907e',
+  textMuted: '#9a907e',
+  text: '#f5ede0',
+  accent: '#f59e0b',
+  accentHover: '#fbbf24',
+  accentMuted: 'rgba(245, 158, 11, 0.12)',
+  success: '#10b981',
+  warning: '#f59e0b',
+  danger: '#ef4444',
+  glassBg: 'rgba(28, 24, 19, 0.65)',
+  glassBorder: 'rgba(245, 158, 11, 0.12)',
+  primary: '#f59e0b',
+  secondary: '#14b8a6',
+  info: '#38bdf8',
+  surfaceBorder: 'rgba(245, 238, 224, 0.08)',
+  cardBg: 'rgba(28, 24, 19, 0.65)'
 };
 
 export type ThemeColors = typeof lightThemeColors;
