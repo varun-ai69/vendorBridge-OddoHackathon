@@ -28,8 +28,10 @@ const startServer = async () => {
   try {
     await connectDB();
 
+    const path = require('path');
     app.use(cors());
     app.use(express.json()); //Middleware to parse JSON bodies
+    app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
     // Base routes
     app.use("/api/v1/auth", authRoutes);

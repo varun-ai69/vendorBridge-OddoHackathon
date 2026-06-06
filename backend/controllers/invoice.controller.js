@@ -65,12 +65,22 @@ exports.generateInvoice = catchAsync(async (req, res, next) => {
       `, [invoiceId, item.po_item_id || null, item.product_name, item.quantity, item.unit, item.unit_price, item.subtotal, item.tax_percent || 0, item.tax_amount || 0, item.total]);
     }
 
+    const { generatePDF } = require('../utils/pdfGenerator');
+    const pdfUrl = await generatePDF('Invoice', genInvoiceNumber, {
+      'Vendor Invoice Ref': invoice_number_vendor,
+      'PO ID': poId,
+      'Date': invoice_date,
+      'Total Amount': `${poCurrency} ${grand_total}`,
+      'Bank Data': `${bank_name} - ${bank_account}`
+    });
+
+    await client.query(`UPDATE invoices SET pdf_url = $1 WHERE id = $2`, [pdfUrl, invoiceId]);
     await client.query('COMMIT');
     
-    sendSuccess(res, 201, 'Invoice generated and sent to Procurement Officer', {
+    sendSuccess(res, 201, 'Invoice generated natively and written to storage', {
       invoice_id: invoiceId,
       invoice_number: genInvoiceNumber,
-      pdf_url: `https://cdn/generated/${genInvoiceNumber}.pdf`
+      pdf_url: pdfUrl
     });
 
   } catch (err) {
