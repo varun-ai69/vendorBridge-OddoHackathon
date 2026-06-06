@@ -20,7 +20,7 @@ BEGIN;
 -- Disable RLS for the seed session (we are running as the DB owner)
 SET LOCAL app.current_org_id  = '00000000-0000-0000-0000-000000000000';
 SET LOCAL app.current_user_id = '00000000-0000-0000-0000-000000000000';
-SET LOCAL app.current_role    = 'admin';
+SET LOCAL app.current_user_role = 'admin';
 
 -- ---------------------------------------------------------------------------
 -- Fixed UUIDs so seed is idempotent and re-runnable
