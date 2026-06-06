@@ -63,42 +63,36 @@ export const LoginScreen = ({ navigation }: any) => {
   const handleLogin = async (data: any) => {
     setIsLoading(true);
     try {
+      let authData;
       if (useMocks) {
         // Authenticate using mock layer
-        const authData = await mockService.login(data.email);
-        await setAuth(authData.token, authData.refresh_token, authData.user);
+        authData = await mockService.login(data.email);
       } else {
         // Authenticate via live API
         const response = await api.post("/auth/login", {
           email: data.email,
           password: data.password,
         });
-        const { token, refresh_token, user } = response.data;
-        await setAuth(token, refresh_token, user);
+        authData = response.data;
       }
+
+      // Step 2: Compulsory 2FA Biometric check if device supports it
+      if (isBiometricsAvailable) {
+        const results = await LocalAuthentication.authenticateAsync({
+          promptMessage: `2FA: Verify it's you, ${authData.user.name}`,
+          fallbackLabel: "Cancel",
+          disableDeviceFallback: false,
+        });
+
+        if (!results.success) {
+          throw new Error("Biometric authentication was cancelled or failed. 2FA is required to log in.");
+        }
+      }
+
+      // Proceed to dashboard
+      await setAuth(authData.token, authData.refresh_token, authData.user);
     } catch (error: any) {
       Alert.alert("Authentication Failed", error.message || "Invalid credentials. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const triggerBiometricAuth = async () => {
-    try {
-      const results = await LocalAuthentication.authenticateAsync({
-        promptMessage: "Unlock VendorBridge",
-        fallbackLabel: "Enter Password",
-      });
-
-      if (results.success) {
-        // For hackathon demo, biometric automatically log in as Procurement Officer if token matches
-        // In real app, it reads the credentials saved inside secure storage
-        setIsLoading(true);
-        const authData = await mockService.login("po@vendorbridge.com");
-        await setAuth(authData.token, authData.refresh_token, authData.user);
-      }
-    } catch (error) {
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -200,22 +194,11 @@ export const LoginScreen = ({ navigation }: any) => {
 
           <View style={styles.actionRow}>
             <LoadingButton
-              label="Sign In"
+              label="Sign In (Requires 2FA Biometrics)"
               isLoading={isLoading}
               onPress={handleSubmit(handleLogin)}
               buttonStyle={styles.loginBtn}
             />
-
-            {isBiometricsAvailable && (
-              <TouchableOpacity
-                style={[styles.biometricsBtn, { borderColor: colors.primary }]}
-                onPress={triggerBiometricAuth}
-                accessibilityRole="button"
-                accessibilityLabel="Sign in with biometrics"
-              >
-                <MaterialCommunityIcons name="fingerprint" size={28} color={colors.primary} />
-              </TouchableOpacity>
-            )}
           </View>
         </View>
 

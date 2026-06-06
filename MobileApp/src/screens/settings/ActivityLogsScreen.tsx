@@ -13,7 +13,7 @@ import { api } from "../../services/api";
 const USE_MOCKS = process.env.EXPO_PUBLIC_USE_MOCKS === "true";
 
 const ACTION_ICONS: Record<string, string> = {
-  rfq_sent: "email-send-outline",
+  rfq_sent: "email-fast-outline",
   quotation_submitted: "file-send-outline",
   po_generated: "file-document-outline",
   invoice_submitted: "receipt-text-outline",

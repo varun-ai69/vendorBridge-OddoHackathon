@@ -83,14 +83,23 @@ exports.submitQuotation = catchAsync(async (req, res, next) => {
     // Update Vendor's RFQ Status to 'quoted'
     await client.query(`UPDATE rfq_vendors SET status = 'quoted' WHERE rfq_id = $1 AND vendor_id = $2`, [rfqId, vendorId]);
 
+    const { generatePDF } = require('../utils/pdfGenerator');
+    const pdfUrl = await generatePDF('Quotation', quotationNumber, {
+      'RFQ ID': rfqId,
+      'Vendor ID': vendorId,
+      'Total Amount': `${currency} ${total_amount}`,
+      'Delivery Timeline': `${delivery_timeline_days} Days`,
+      'Delivery Terms': delivery_terms,
+      'Payment Terms': payment_terms
+    });
+
+    await client.query(`UPDATE quotations SET pdf_url = $1 WHERE id = $2`, [pdfUrl, quoteId]);
     await client.query('COMMIT');
 
-    const mockPdfUrl = `https://cdn/generated/${quotationNumber}.pdf`;
-
-    sendSuccess(res, 201, 'Quotation submitted and PDF generated', {
+    sendSuccess(res, 201, 'Quotation submitted and PDF generated natively', {
       quotation_id: quoteId,
       quotation_number: quotationNumber,
-      pdf_url: mockPdfUrl
+      pdf_url: pdfUrl
     });
 
   } catch (error) {

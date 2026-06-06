@@ -73,7 +73,7 @@ const linking: any = {
 // ── Shared Settings Stack ─────────────────────────────────────────
 const SettingsStackScreen = () => (
   <Stack.Navigator screenOptions={{ headerShown: true }}>
-    <Stack.Screen name="Settings" component={SettingsScreen} />
+    <Stack.Screen name="SettingsOverview" component={SettingsScreen} options={{ title: "Settings" }} />
     <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{ title: "Change Password" }} />
   </Stack.Navigator>
 );

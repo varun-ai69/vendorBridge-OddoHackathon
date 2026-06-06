@@ -15,7 +15,7 @@ import { SkeletonListScreen } from "../../components/common/SkeletonLoader";
 
 const STATUS_META: Record<string, { color: string; icon: string; label: string }> = {
   draft:     { color: "#94a3b8", icon: "pencil-outline",       label: "Draft" },
-  sent:      { color: "#0ea5e9", icon: "email-send-outline",   label: "Sent" },
+  sent:      { color: "#0ea5e9", icon: "email-fast-outline",   label: "Sent" },
   closed:    { color: "#8b5cf6", icon: "lock-outline",         label: "Closed" },
   awarded:   { color: "#10b981", icon: "trophy-outline",       label: "Awarded" },
   cancelled: { color: "#ef4444", icon: "cancel",               label: "Cancelled" },

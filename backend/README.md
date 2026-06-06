@@ -318,3 +318,73 @@ SQL files (`model/`) are not needed inside the backend image — they are mounte
 ## Schema reference
 
 See `model/SCHEMA.md` for the full table reference: all columns with types and FK targets, enums, trigger summary, RLS rules, views, and the FK chain tree.
+
+---
+
+## What We Implemented
+
+Modules built during the hackathon, covering the full procurement lifecycle end-to-end.
+
+### Auth & Organization
+- Register organization + admin user in a single atomic transaction
+- JWT login with refresh token (stored in DB, revocable on logout)
+- Profile management for all roles
+
+### User Management
+- Admin invites internal users (Procurement Officer, Manager) with generated passwords
+- List, update, deactivate, and delete users within the org
+
+### Vendor Management
+- Admin creates a vendor company + linked vendor login user atomically (one request)
+- Approve / deactivate vendors; vendors can update their own profile
+- Performance stats cached on vendor row (`cached_rating`, `cached_total_orders`)
+
+### RFQ (Request for Quotation)
+- Procurement Officer creates RFQ with line items and sends to selected approved vendors
+- Add more vendors to an RFQ post-creation; Cancel RFQ with reason
+- Vendors see only their assigned RFQs
+
+### Quotations
+- Vendor submits quotation with per-item pricing — **PDF generated** and stored in `backend/uploads/`
+- Procurement Officer gets a **side-by-side comparison matrix** (lowest price per item flagged)
+- Shortlisting one quotation auto-creates an Approval Request for the Manager
+
+### Approval Workflow
+- Manager reviews pending approvals with RFQ + vendor + amount context
+- Approve → quotation accepted, RFQ awarded, losing quotations rejected, `rfq_vendors` pivot updated
+- Reject → quotation rejected, RFQ stays open for re-shortlisting
+
+### Purchase Orders
+- PO generated only from an approved approval (validated in transaction)
+- Quotation line items **snapshotted** onto `po_items` — prices legally locked
+- **PDF generated** and stored in `backend/uploads/`
+- Status flow: `generated → acknowledged → in_transit → delivered | cancelled`
+
+### Invoices
+- Vendor generates invoice against a PO — **PDF generated** and stored in `backend/uploads/`
+- Procurement Officer / Admin marks invoice `paid`, `overdue`, or `disputed`
+
+### Activity Logs & Notifications
+- Global audit log (`activity_logs` table) filterable by entity, user, and date
+- Per-user notification inbox (`notifications` table) with read/unread tracking
+
+### Analytical Dashboards
+- 4 role-specific dashboards: Admin, Procurement Officer, Manager, Vendor
+- Each aggregates data live from PostgreSQL scoped to the logged-in user's org
+
+### Reports
+- Procurement summary, monthly spend trend, vendor performance, approval analytics
+- Spend by category, CSV export endpoint
+- Vendor self-service performance report
+
+### File Uploads
+- Upload attachments linked to any entity (RFQ, PO, Invoice) via `file_uploads` table
+- Files served statically at `GET /uploads/<filename>`
+
+### PDF Storage Summary
+
+| Document | Naming | URL |
+|---|---|---|
+| Quotation | `QT-2026-XXXX.pdf` | `/uploads/QT-2026-XXXX.pdf` |
+| Purchase Order | `PO-2026-XXXX.pdf` | `/uploads/PO-2026-XXXX.pdf` |
+| Invoice | `INV-2026-XXXX.pdf` | `/uploads/INV-2026-XXXX.pdf` |

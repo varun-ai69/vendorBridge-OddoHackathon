@@ -44,12 +44,12 @@ exports.generatePo = catchAsync(async (req, res, next) => {
       INSERT INTO purchase_orders (
         org_id, po_number, rfq_id, quotation_id, approval_id, vendor_id,
         delivery_address, expected_delivery_date, payment_terms, special_instructions,
-        currency, subtotal, tax_total, grand_total, status, created_by
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'generated', $15) RETURNING id
+        subtotal, tax_total, grand_total, status, created_by
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 'generated', $14) RETURNING id
     `, [
       orgId, poNumber, rfq_id, quotation_id, approval_id, qMeta.vendor_id, 
       delivery_address, expected_delivery_date, payment_terms, special_instructions,
-      qMeta.currency, qMeta.subtotal, qMeta.tax_total, qMeta.total_amount, userId
+      qMeta.subtotal, qMeta.tax_total, qMeta.total_amount, userId
     ]);
 
     const poId = poRes.rows[0].id;
@@ -63,12 +63,22 @@ exports.generatePo = catchAsync(async (req, res, next) => {
       `, [poId, item.product_name, item.quantity, item.unit, item.unit_price, item.subtotal, item.tax_percent, item.tax_amount, item.total]);
     }
 
+    const { generatePDF } = require('../utils/pdfGenerator');
+    const pdfUrl = await generatePDF('Purchase Order', poNumber, {
+      'Quotation ID': quotation_id,
+      'Approval ID': approval_id,
+      'Total Amount': `${qMeta.currency} ${qMeta.total_amount}`,
+      'Delivery Address': delivery_address,
+      'Expected Delivery': expected_delivery_date
+    });
+
+    await client.query(`UPDATE purchase_orders SET pdf_url = $1 WHERE id = $2`, [pdfUrl, poId]);
     await client.query('COMMIT');
     
-    sendSuccess(res, 201, 'Purchase Order generated and sent to vendor', {
+    sendSuccess(res, 201, 'Purchase Order generated physically', {
       po_id: poId,
       po_number: poNumber,
-      pdf_url: `https://cdn/generated/${poNumber}.pdf`
+      pdf_url: pdfUrl
     });
 
   } catch (err) {
