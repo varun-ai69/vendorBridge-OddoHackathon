@@ -90,7 +90,11 @@ export default function RegisterForm() {
       });
       router.push("/login?registered=1&role=admin");
     } catch (err) {
-      setError(err.message || "Registration failed");
+      if (err.data && err.data.details && err.data.details.length > 0) {
+        setError(err.data.details.map(d => d.issue).join(" "));
+      } else {
+        setError(err.message || "Registration failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -124,7 +128,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <Card glass className="!p-8">
+    <Card glass className="!">
       <h2 className="text-xl font-semibold">Register Organization</h2>
       <p className="mt-1 text-sm text-muted">Organization Head & Admin Setup</p>
 
@@ -157,12 +161,12 @@ export default function RegisterForm() {
               </div>
               <Input label="Website" type="url" value={form.org_website} onChange={update("org_website")} />
 
-              <hr className="border-[var(--border)]" />
+              <hr className="border-(--border)" />
               <p className="text-sm font-medium">Admin Account</p>
               <Input label="Full Name" icon={IoPerson} value={form.admin_name} onChange={update("admin_name")} required />
               <Input label="Email *" type="email" icon={IoMail} value={form.admin_email} onChange={update("admin_email")} required />
               <Input label="Mobile Number *" type="tel" icon={IoCall} placeholder="+91-9876543210" value={form.admin_phone} onChange={update("admin_phone")} required />
-              <Input label="Password" type="password" icon={IoLockClosed} value={form.admin_password} onChange={update("admin_password")} required minLength={8} />
+              <Input label="Password (8+ chars, uppercase, number, symbol)" type="password" icon={IoLockClosed} value={form.admin_password} onChange={update("admin_password")} required minLength={8} />
             </>
           )}
 

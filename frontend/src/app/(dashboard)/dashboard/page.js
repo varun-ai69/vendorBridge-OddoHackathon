@@ -116,7 +116,7 @@ export default function DashboardPage() {
           </div>
           <div className="space-y-3">
             {recentItems.slice(0, 5).map((item) => (
-              <div key={item.id || item.rfq_id} className="flex items-center justify-between rounded-lg border border-[var(--border)] p-3">
+              <div key={item.id || item.rfq_id} className="flex items-center justify-between rounded-lg border border-(--border) p-3">
                 <div>
                   <p className="font-medium text-sm">{item.title || item.rfq_number || item.po_number}</p>
                   <p className="text-xs text-muted">{formatDate(item.created_at)}</p>

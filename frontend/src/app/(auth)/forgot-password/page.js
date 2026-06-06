@@ -29,7 +29,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <Card glass className="!p-8">
+    <Card glass className="!">
       <Link href="/login" className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground mb-4">
         <IoArrowBack /> Back to login
       </Link>

@@ -22,7 +22,7 @@ export default function Header({ onMenuToggle, sidebarCollapsed }) {
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[var(--border)] glass px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-(--border) glass px-6">
       <div className="flex items-center gap-4">
         <button
           onClick={onMenuToggle}
@@ -34,7 +34,7 @@ export default function Header({ onMenuToggle, sidebarCollapsed }) {
           <h1 className="text-sm font-semibold">
             Welcome back, {user?.name?.split(" ")[0]}
           </h1>
-          <p className="text-xs text-muted">{user?.org_name || "VendorBridge ERP"}</p>
+          <p className="text-xs text-muted">{user?.org_name || "VendorLand ERP"}</p>
         </div>
       </div>
 

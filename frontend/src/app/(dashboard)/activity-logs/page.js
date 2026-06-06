@@ -42,7 +42,7 @@ export default function ActivityLogsPage() {
           <div className="absolute left-5 top-0 bottom-0 w-px bg-[var(--border)]" />
           <div className="space-y-4">
             {logs.map((log, i) => (
-              <Card key={log.log_id || i} delay={i * 0.03} className="!p-4 ml-10 relative">
+              <Card key={log.log_id || i} delay={i * 0.03} className="! ml-10 relative">
                 <div className="absolute -left-[30px] top-5 h-3 w-3 rounded-full bg-accent border-2 border-background" />
                 <div className="flex items-start justify-between gap-4">
                   <div>

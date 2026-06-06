@@ -22,7 +22,7 @@ export default function RfqDetailPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getRfq(id).then(setRfq).catch(() => router.push("/rfq")).finally(() => setLoading(false));
+    getRfq(id).then((res) => setRfq(res.rfq || res)).catch(() => router.push("/rfq")).finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <LoadingSpinner className="py-20" size="lg" />;
@@ -59,7 +59,7 @@ export default function RfqDetailPage() {
           <h3 className="font-semibold mt-6 mb-3">Line Items</h3>
           <div className="space-y-3">
             {(rfq.items || []).map((item, i) => (
-              <div key={i} className="rounded-lg border border-[var(--border)] p-4">
+              <div key={i} className="rounded-lg border border-(--border) p-4">
                 <p className="font-medium">{item.product_name}</p>
                 <p className="text-sm text-muted mt-1">{item.description}</p>
                 <p className="text-sm mt-2">Qty: <span className="font-medium">{item.quantity} {item.unit}</span></p>

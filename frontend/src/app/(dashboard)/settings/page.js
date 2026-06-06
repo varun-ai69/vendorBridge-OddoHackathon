@@ -23,7 +23,7 @@ export default function SettingsPage() {
     setMessage("");
     try {
       const updated = await updateProfile(profile);
-      updateUser(updated);
+      updateUser(updated.user || updated);
       setMessage("Profile updated successfully");
     } catch (err) {
       setMessage(err.message);

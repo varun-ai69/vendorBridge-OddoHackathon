@@ -59,7 +59,7 @@ export default function RfqPage() {
           <p className="text-sm text-muted mt-1">Request for Quotation management</p>
         </div>
         <div className="flex gap-3">
-          <select className="rounded-lg border border-[var(--border-strong)] bg-surface px-3 py-2 text-sm" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+          <select className="rounded-lg border border-(--border-strong) bg-surface px-3 py-2 text-sm" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
             <option value="">All Statuses</option>
             {Object.entries(RFQ_STATUSES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
           </select>

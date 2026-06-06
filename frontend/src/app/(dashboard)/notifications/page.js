@@ -55,7 +55,7 @@ export default function NotificationsPage() {
             <Card
               key={n.id}
               delay={i * 0.03}
-              className={`!p-4 cursor-pointer ${!n.is_read ? "border-accent/30 bg-accent-muted/20" : ""}`}
+              className={`! cursor-pointer ${!n.is_read ? "border-accent/30 bg-accent-muted/20" : ""}`}
               onClick={() => !n.is_read && markRead(n.id)}
             >
               <div className="flex items-start justify-between gap-4">

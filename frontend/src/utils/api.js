@@ -249,7 +249,7 @@ export const assignVendor = (data) => api.post("/vendor-assignments", data);
 
 export const getEmployeeVendors = (employeeId) => api.get(`/employees/${employeeId}/vendors`);
 
-export const assignVendorsToRfq = (rfqId, vendorIds) => api.post(`/rfqs/${rfqId}/vendors`, { vendorIds });
+export const assignVendorsToRfq = (rfqId, vendorIds) => api.post(`/rfq/${rfqId}/vendors`, { vendor_ids: vendorIds });
 
 export const getVendorAnalytics = (vendorId) => api.get(`/vendors/${vendorId}/analytics`);
 

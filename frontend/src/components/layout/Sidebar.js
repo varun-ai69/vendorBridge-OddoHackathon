@@ -18,17 +18,17 @@ export default function Sidebar({ collapsed, onToggle }) {
   return (
     <aside
       className={clsx(
-        "fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[var(--border)] glass transition-all duration-300",
-        collapsed ? "w-[72px]" : "w-[var(--sidebar-width)]"
+        "fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-(--border) glass transition-all duration-300",
+        collapsed ? "w-[72px]" : "w-(--sidebar-width)"
       )}
     >
-      <div className="flex h-16 items-center gap-3 border-b border-[var(--border)] px-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent text-white">
-          <Logo className="text-lg" />
+      <div className="flex h-16 items-center gap-3 border-b border-(--border) px-4">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl overflow-hidden shadow-sm bg-white border border-(--border)">
+          <Logo className="w-8 h-8" />
         </div>
         {!collapsed && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <p className="text-sm font-bold tracking-tight">VendorBridge</p>
+            <p className="text-sm font-bold tracking-tight">VendorLand</p>
             <p className="text-[10px] text-muted">{ROLE_LABELS[user?.role]}</p>
           </motion.div>
         )}
@@ -67,7 +67,7 @@ export default function Sidebar({ collapsed, onToggle }) {
         </ul>
       </nav>
 
-      <div className="border-t border-[var(--border)] p-3">
+      <div className="border-t border-(--border) p-3">
         <button
           onClick={logout}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-red-50 hover:text-danger dark:hover:bg-red-900/20"

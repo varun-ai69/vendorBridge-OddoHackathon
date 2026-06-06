@@ -70,7 +70,7 @@ export default function ApprovalsPage() {
           <h1 className="text-2xl font-bold">Approvals</h1>
           <p className="text-sm text-muted mt-1">Review and approve procurement requests</p>
         </div>
-        <select className="rounded-lg border border-[var(--border-strong)] bg-surface px-3 py-2 text-sm" value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <select className="rounded-lg border border-(--border-strong) bg-surface px-3 py-2 text-sm" value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="">All</option>
           {Object.entries(APPROVAL_STATUSES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
         </select>

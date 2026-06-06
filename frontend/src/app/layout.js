@@ -1,26 +1,21 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import Providers from "@/components/providers/Providers";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const googleSans = Plus_Jakarta_Sans({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
 export const metadata = {
-  title: "VendorBridge — Procurement ERP",
+  title: "VendorLand — Procurement ERP",
   description: "Enterprise procurement and vendor management platform",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full`}>
-      <body className="min-h-full antialiased">
+    <html lang="en" suppressHydrationWarning className={`${googleSans.variable} h-full`}>
+      <body className="min-h-full antialiased font-sans">
         <Providers>{children}</Providers>
       </body>
     </html>
