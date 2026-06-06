@@ -124,6 +124,22 @@ JWT payload:
 
 ---
 
+## Demo credentials (seed data)
+
+All passwords: `Demo@12345`
+
+| Email | Role |
+|---|---|
+| admin@vendorbridge.com | admin |
+| procurement@vendorbridge.com | procurement_officer |
+| manager@vendorbridge.com | manager |
+| vendor1@steelsuppliers.com | vendor |
+| vendor2@ironworks.com | vendor |
+
+The seed also loads a complete lifecycle demo: RFQ-2026-0001 awarded to Steel Suppliers Ltd, PO-2026-0001 delivered, INV-2026-0001 pending payment — so every flow is visible on first login.
+
+---
+
 ## Procurement lifecycle (state machine)
 
 ```
