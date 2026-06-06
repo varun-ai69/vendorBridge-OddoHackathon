@@ -164,6 +164,45 @@ export async function mockRequest(endpoint, options = {}) {
       created_at: new Date().toISOString(),
     };
     store.users.push(newUser);
+
+    if (parsed.role === "vendor") {
+      const newVendorId = `vendor-${Date.now()}`;
+      const newVendor = {
+        id: newVendorId,
+        company_name: parsed.company_name || "New Partner Vendor",
+        tagline: "Quality supplier partner.",
+        contact_person: parsed.name,
+        email: parsed.email,
+        phone: parsed.phone || "",
+        address: "Industrial Area",
+        city: "Mumbai",
+        state: "Maharashtra",
+        country: "India",
+        gst_number: "",
+        pan_number: "",
+        category: ["General"],
+        industry: "Manufacturing",
+        is_active: true,
+        is_approved: true,
+        premium: false,
+        rating: 4.0,
+        rating_details: { delivery: 4.0, quality: 4.0, communication: 4.0, pricing: 4.0, documentation: 4.0 },
+        total_orders: 0,
+        on_time_delivery_rate: 100,
+        response_rate: 100,
+        rfqs_completed: 0,
+        establishment_year: new Date().getFullYear(),
+        team_size: "10-50 employees",
+        website: "",
+        about: "We are an approved vendor partner registered directly by the Organization Administrator.",
+        logo_url: "",
+        banner_url: "",
+        top_products: [],
+        created_at: new Date().toISOString(),
+      };
+      store.vendors.push(newVendor);
+    }
+
     saveStore();
     return { success: true, message: "User invited", user_id: newUser.id };
   }
@@ -186,8 +225,28 @@ export async function mockRequest(endpoint, options = {}) {
   }
 
   if (endpoint === "/admin/vendors" && method === "POST") {
-    const v = { id: `vendor-${Date.now()}`, ...parsed, is_active: true, is_approved: false, rating: 0, created_at: new Date().toISOString() };
+    const v = { 
+      id: `vendor-${Date.now()}`, 
+      ...parsed, 
+      is_active: true, 
+      is_approved: true, 
+      rating: 4.0, 
+      rating_details: { delivery: 4.0, quality: 4.0, communication: 4.0, pricing: 4.0, documentation: 4.0 },
+      created_at: new Date().toISOString() 
+    };
     store.vendors.push(v);
+
+    // Auto-create user login
+    const newUser = {
+      id: `user-${Date.now()}`,
+      name: parsed.contact_person || parsed.company_name,
+      email: parsed.email,
+      role: "vendor",
+      is_active: true,
+      created_at: new Date().toISOString(),
+    };
+    store.users.push(newUser);
+
     saveStore();
     return { success: true, vendor_id: v.id, message: "Vendor created" };
   }
@@ -199,14 +258,249 @@ export async function mockRequest(endpoint, options = {}) {
     return { success: true };
   }
 
-  if (endpoint === "/vendor/profile" && method === "GET") {
-    return store.vendors[0];
+  // ─── Vendor Directory & Assignments ─────────────────────────────────────────
+  if (endpoint === "/vendors" && method === "GET") {
+    let list = [...store.vendors];
+    if (params?.search) {
+      const s = params.search.toLowerCase();
+      list = list.filter((v) => v.company_name.toLowerCase().includes(s) || (v.tagline && v.tagline.toLowerCase().includes(s)));
+    }
+    if (params?.category) {
+      list = list.filter((v) => v.category.includes(params.category));
+    }
+    if (params?.industry) {
+      list = list.filter((v) => v.industry === params.industry);
+    }
+    if (params?.city) {
+      list = list.filter((v) => v.city?.toLowerCase() === params.city.toLowerCase());
+    }
+    if (params?.rating) {
+      list = list.filter((v) => v.rating >= parseFloat(params.rating));
+    }
+    if (params?.gst_verified === "true") {
+      list = list.filter((v) => !!v.gst_number);
+    }
+    if (params?.premium === "true") {
+      list = list.filter((v) => !!v.premium);
+    }
+    return { vendors: list, total: list.length };
   }
 
-  if (endpoint === "/vendor/profile" && method === "PUT") {
-    Object.assign(store.vendors[0], parsed);
+  if (endpoint.match(/^\/vendors\/[^/]+$/) && method === "GET") {
+    const id = endpoint.split("/")[2];
+    const vendor = store.vendors.find((v) => v.id === id);
+    if (!vendor) {
+      const err = new Error("Vendor not found");
+      err.status = 404;
+      throw err;
+    }
+    const products = store.vendorProducts.filter((p) => p.vendor_id === id);
+    const links = store.vendorLinks.filter((l) => l.vendor_id === id);
+    const timeline = store.vendorTimeline.filter((t) => t.vendor_id === id);
+    const analytics = {
+      rating_details: vendor.rating_details || { delivery: 4.0, quality: 4.0, communication: 4.0, pricing: 4.0, documentation: 4.0 },
+      on_time_delivery_rate: vendor.on_time_delivery_rate || 90,
+      response_rate: vendor.response_rate || 90,
+      rfqs_completed: vendor.rfqs_completed || 10,
+      monthly_performance: [
+        { month: "Jan", score: 4.2 },
+        { month: "Feb", score: 4.4 },
+        { month: "Mar", score: 4.3 },
+        { month: "Apr", score: 4.6 },
+        { month: "May", score: 4.5 },
+        { month: "Jun", score: vendor.rating || 4.5 },
+      ]
+    };
+    return { vendor, products, links, analytics, timeline };
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+$/) && method === "PUT") {
+    const id = endpoint.split("/")[2];
+    const vendor = store.vendors.find((v) => v.id === id);
+    if (vendor) {
+      Object.assign(vendor, parsed);
+      saveStore();
+      return { success: true, vendor };
+    }
+    const err = new Error("Vendor not found");
+    err.status = 404;
+    throw err;
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+\/products$/) && method === "GET") {
+    const id = endpoint.split("/")[2];
+    const products = store.vendorProducts.filter((p) => p.vendor_id === id);
+    return { products };
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+\/products$/) && method === "POST") {
+    const id = endpoint.split("/")[2];
+    const newProduct = {
+      id: `vp-${Date.now()}`,
+      vendor_id: id,
+      name: parsed.name,
+      category: parsed.category || "General",
+      moq: parsed.moq || "1 Unit",
+      price_range: parsed.price_range || "Contact for Price",
+      availability: "In Stock",
+      images: [parsed.image || "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=300&auto=format&fit=crop&q=80"],
+      description: parsed.description || "",
+    };
+    store.vendorProducts.push(newProduct);
     saveStore();
-    return store.vendors[0];
+    return { success: true, product: newProduct };
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+\/products\/[^/]+$/) && method === "DELETE") {
+    const parts = endpoint.split("/");
+    const productId = parts[4];
+    store.vendorProducts = store.vendorProducts.filter((p) => p.id !== productId);
+    saveStore();
+    return { success: true };
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+\/media$/) && method === "POST") {
+    return { success: true, file_url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&auto=format&fit=crop&q=80" };
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+\/links$/) && method === "GET") {
+    const id = endpoint.split("/")[2];
+    const links = store.vendorLinks.filter((l) => l.vendor_id === id);
+    return { links };
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+\/links$/) && method === "POST") {
+    const id = endpoint.split("/")[2];
+    const newLink = { id: `vl-${Date.now()}`, vendor_id: id, platform: parsed.platform, url: parsed.url };
+    store.vendorLinks.push(newLink);
+    saveStore();
+    return { success: true, link: newLink };
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+\/links\/[^/]+$/) && method === "PUT") {
+    const parts = endpoint.split("/");
+    const linkId = parts[4];
+    const link = store.vendorLinks.find((l) => l.id === linkId);
+    if (link) {
+      link.url = parsed.url;
+      link.platform = parsed.platform;
+      saveStore();
+    }
+    return { success: true, link };
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+\/links\/[^/]+$/) && method === "DELETE") {
+    const parts = endpoint.split("/");
+    const linkId = parts[4];
+    store.vendorLinks = store.vendorLinks.filter((l) => l.id !== linkId);
+    saveStore();
+    return { success: true };
+  }
+
+  if (endpoint === "/vendor-assignments" && method === "POST") {
+    const u = store.users.find((x) => x.id === parsed.employeeId);
+    const newAssignment = {
+      id: `va-${Date.now()}`,
+      vendor_id: parsed.vendorId,
+      employee_id: parsed.employeeId,
+      employee_name: u ? u.name : "Employee",
+      department: parsed.departmentId || (u ? u.department || "Procurement" : "Procurement"),
+      status: parsed.status || "assigned",
+      date_assigned: new Date().toISOString().split("T")[0]
+    };
+    // Update existing or add new
+    store.vendorAssignments = store.vendorAssignments.filter((a) => a.vendor_id !== parsed.vendorId);
+    store.vendorAssignments.push(newAssignment);
+    saveStore();
+    return { success: true, assignment: newAssignment };
+  }
+
+  if (endpoint.match(/^\/employees\/[^/]+\/vendors$/) && method === "GET") {
+    const empId = endpoint.split("/")[2];
+    const assignments = store.vendorAssignments.filter((a) => a.employee_id === empId);
+    const list = assignments.map((a) => {
+      const v = store.vendors.find((vendor) => vendor.id === a.vendor_id);
+      if (v) return { ...v, assignment: a };
+      return null;
+    }).filter(Boolean);
+    return { vendors: list };
+  }
+
+  if (endpoint.match(/^\/rfqs\/[^/]+\/vendors$/) && method === "POST") {
+    const rfqId = endpoint.split("/")[2];
+    const rfq = store.rfqs.find((r) => r.id === rfqId || r.rfq_id === rfqId);
+    if (rfq) {
+      const vendorIds = parsed.vendorIds || [];
+      vendorIds.forEach((vid) => {
+        const exists = rfq.vendors?.find((v) => v.id === vid);
+        if (!exists) {
+          const v = store.vendors.find((vend) => vend.id === vid);
+          if (v) {
+            rfq.vendors = rfq.vendors || [];
+            rfq.vendors.push({ id: v.id, company_name: v.company_name });
+          }
+        }
+      });
+      rfq.vendor_count = rfq.vendors?.length || 0;
+      saveStore();
+    }
+    return { success: true, message: "Vendors assigned to RFQ" };
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+\/analytics$/) && method === "GET") {
+    const id = endpoint.split("/")[2];
+    const vendor = store.vendors.find((v) => v.id === id);
+    return {
+      rating_details: vendor?.rating_details || { delivery: 4.0, quality: 4.0, communication: 4.0, pricing: 4.0, documentation: 4.0 },
+      on_time_delivery_rate: vendor?.on_time_delivery_rate || 90,
+      response_rate: vendor?.response_rate || 90,
+      rfqs_completed: vendor?.rfqs_completed || 10,
+    };
+  }
+
+  if (endpoint.match(/^\/vendors\/[^/]+\/timeline$/) && method === "GET") {
+    const id = endpoint.split("/")[2];
+    const timeline = store.vendorTimeline.filter((t) => t.vendor_id === id);
+    return { timeline };
+  }
+
+  // ─── Categories ─────────────────────────────────────────────────────────────
+  if (endpoint === "/categories" && method === "GET") {
+    return { categories: store.categories || [] };
+  }
+
+  if (endpoint === "/categories" && method === "POST") {
+    const name = parsed.name?.trim();
+    if (name && !store.categories.includes(name)) {
+      store.categories.push(name);
+      saveStore();
+    }
+    return { success: true, categories: store.categories };
+  }
+
+  if (endpoint.match(/^\/categories\/[^/]+$/) && method === "DELETE") {
+    const name = decodeURIComponent(endpoint.split("/")[2]);
+    store.categories = (store.categories || []).filter((c) => c !== name);
+    saveStore();
+    return { success: true, categories: store.categories };
+  }
+
+  if (endpoint === "/vendor/profile" && method === "GET") {
+    const profile = store.vendors.find(v => v.email === user?.email) || store.vendors[0];
+    return profile;
+  }
+ 
+  if (endpoint === "/vendor/profile" && method === "PUT") {
+    const idx = store.vendors.findIndex(v => v.email === user?.email);
+    if (idx !== -1) {
+      Object.assign(store.vendors[idx], parsed);
+      saveStore();
+      return store.vendors[idx];
+    } else {
+      Object.assign(store.vendors[0], parsed);
+      saveStore();
+      return store.vendors[0];
+    }
   }
 
   // ─── RFQ ────────────────────────────────────────────────────────────────

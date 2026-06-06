@@ -48,10 +48,7 @@ export default function RegisterForm() {
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    const paramRole = searchParams.get("role");
-    if (paramRole && Object.values(ROLES).includes(paramRole)) {
-      setRole(paramRole);
-    }
+    setRole(ROLES.ADMIN);
   }, [searchParams]);
 
   const form = forms[role];
@@ -128,12 +125,14 @@ export default function RegisterForm() {
 
   return (
     <Card glass className="!p-8">
-      <h2 className="text-xl font-semibold">Create Account</h2>
-      <p className="mt-1 text-sm text-muted">Select user type and complete registration</p>
+      <h2 className="text-xl font-semibold">Register Organization</h2>
+      <p className="mt-1 text-sm text-muted">Organization Head & Admin Setup</p>
 
-      <div className="mt-5">
-        <label className="text-sm font-medium text-foreground/80 mb-2 block">User Type</label>
-        <RoleSelector value={role} onChange={(r) => { setRole(r); setError(""); setSuccess(""); }} />
+      <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 rounded-xl text-xs text-amber-700 dark:text-amber-300">
+        <p className="font-semibold mb-1">Looking for Employee or Vendor Portal?</p>
+        <p className="leading-relaxed">
+          Manager, Procurement Officer, and Partner Vendor accounts are managed privately. They must be registered by their Organization Head (Admin) and log in using the credentials provided.
+        </p>
       </div>
 
       {success ? (

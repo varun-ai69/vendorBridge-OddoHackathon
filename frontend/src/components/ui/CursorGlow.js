@@ -36,7 +36,7 @@ export default function CursorGlow() {
       className="pointer-events-none fixed z-[100] hidden lg:block"
       style={{ left: springX, top: springY, x: "-50%", y: "-50%" }}
     >
-      <div className="h-64 w-64 rounded-full bg-accent/5 blur-3xl" />
+      <div className="h-80 w-80 rounded-full bg-gradient-to-tr from-accent/6 via-transparent to-amber-500/4 blur-3xl opacity-85" />
     </motion.div>
   );
 }

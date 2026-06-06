@@ -68,7 +68,7 @@ export default function ComparePage() {
             <p className="text-xs text-muted uppercase tracking-wider">Lowest Price</p>
             <p className="font-semibold mt-1">{data.summary.lowest_price_vendor_name || "—"}</p>
           </Card>
-          <Card className="!p-4 border-blue-200 dark:border-blue-800">
+          <Card className="!p-4 border-accent/40 dark:border-accent/20">
             <p className="text-xs text-muted uppercase tracking-wider">Fastest Delivery</p>
             <p className="font-semibold mt-1">{data.summary.fastest_delivery_vendor_name || "—"}</p>
           </Card>

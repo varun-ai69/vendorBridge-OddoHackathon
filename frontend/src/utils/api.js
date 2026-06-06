@@ -219,6 +219,46 @@ export const getVendorProfile = () => api.get("/vendor/profile");
 
 export const updateVendorProfile = (data) => api.put("/vendor/profile", data);
 
+export const getMarketplaceVendors = (params) => api.get("/vendors", { params });
+
+export const getVendorDetail = (vendorId) => api.get(`/vendors/${vendorId}`);
+
+export const updateVendorDetail = (vendorId, data) => api.put(`/vendors/${vendorId}`, data);
+
+export const getVendorProducts = (vendorId) => api.get(`/vendors/${vendorId}/products`);
+
+export const createVendorProduct = (vendorId, data) => api.post(`/vendors/${vendorId}/products`, data);
+
+export const deleteVendorProduct = (vendorId, productId) => api.delete(`/vendors/${vendorId}/products/${productId}`);
+
+export const uploadVendorMedia = (vendorId, file) => {
+  const form = new FormData();
+  form.append("file", file);
+  return api.post(`/vendors/${vendorId}/media`, form);
+};
+
+export const getVendorLinks = (vendorId) => api.get(`/vendors/${vendorId}/links`);
+
+export const saveVendorLink = (vendorId, data) => api.post(`/vendors/${vendorId}/links`, data);
+
+export const updateVendorLink = (vendorId, linkId, data) => api.put(`/vendors/${vendorId}/links/${linkId}`, data);
+
+export const deleteVendorLink = (vendorId, linkId) => api.delete(`/vendors/${vendorId}/links/${linkId}`);
+
+export const assignVendor = (data) => api.post("/vendor-assignments", data);
+
+export const getEmployeeVendors = (employeeId) => api.get(`/employees/${employeeId}/vendors`);
+
+export const assignVendorsToRfq = (rfqId, vendorIds) => api.post(`/rfqs/${rfqId}/vendors`, { vendorIds });
+
+export const getVendorAnalytics = (vendorId) => api.get(`/vendors/${vendorId}/analytics`);
+
+export const getVendorTimeline = (vendorId) => api.get(`/vendors/${vendorId}/timeline`);
+
+export const getCategories = () => api.get("/categories");
+export const createCategory = (name) => api.post("/categories", { name });
+export const deleteCategory = (name) => api.delete(`/categories/${encodeURIComponent(name)}`);
+
 // ─── RFQ ────────────────────────────────────────────────────────────────────
 export const createRfq = (data) => api.post("/rfq", data);
 

@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import clsx from "clsx";
 
 const variants = {
-  primary: "bg-accent text-white hover:bg-accent-hover shadow-sm",
-  secondary: "bg-surface border border-[var(--border-strong)] text-foreground hover:bg-accent-muted",
+  primary: "bg-accent text-white hover:bg-accent-hover shadow-sm border border-accent-hover/30",
+  secondary: "bg-surface/60 border border-[var(--border-strong)] text-foreground hover:bg-accent-muted hover:border-accent/30 backdrop-blur-sm",
   ghost: "text-muted hover:text-foreground hover:bg-accent-muted",
   danger: "bg-danger text-white hover:opacity-90",
 };

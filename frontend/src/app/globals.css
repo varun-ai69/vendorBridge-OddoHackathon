@@ -1,43 +1,46 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #fdfbf7;
+  --foreground: #1e1d19;
   --surface: #ffffff;
-  --surface-elevated: rgba(255, 255, 255, 0.72);
-  --border: rgba(15, 23, 42, 0.08);
-  --border-strong: rgba(15, 23, 42, 0.14);
-  --muted: #64748b;
-  --accent: #1e40af;
-  --accent-hover: #1d4ed8;
-  --accent-muted: rgba(30, 64, 175, 0.08);
-  --success: #059669;
-  --warning: #d97706;
+  --surface-elevated: rgba(255, 255, 255, 0.75);
+  --border: rgba(180, 83, 9, 0.08);
+  --border-strong: rgba(180, 83, 9, 0.16);
+  --muted: #78716c;
+  --accent: #b45309;
+  --accent-hover: #92400e;
+  --accent-muted: rgba(180, 83, 9, 0.07);
+  --success: #16a34a;
+  --warning: #ca8a04;
   --danger: #dc2626;
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.1);
-  --glass-bg: rgba(255, 255, 255, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.5);
+  --shadow-sm: 0 1px 2px rgba(180, 83, 9, 0.02), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(180, 83, 9, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 12px 40px rgba(180, 83, 9, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03);
+  --glass-bg: rgba(253, 251, 247, 0.65);
+  --glass-border: rgba(180, 83, 9, 0.08);
   --sidebar-width: 260px;
 }
 
 .dark {
-  --background: #0b1120;
-  --foreground: #e2e8f0;
-  --surface: #111827;
-  --surface-elevated: rgba(17, 24, 39, 0.75);
-  --border: rgba(148, 163, 184, 0.1);
-  --border-strong: rgba(148, 163, 184, 0.18);
-  --muted: #94a3b8;
-  --accent: #3b82f6;
-  --accent-hover: #60a5fa;
-  --accent-muted: rgba(59, 130, 246, 0.12);
+  --background: #13100c;
+  --foreground: #f5ede0;
+  --surface: #1c1813;
+  --surface-elevated: rgba(28, 24, 19, 0.8);
+  --border: rgba(245, 238, 224, 0.08);
+  --border-strong: rgba(245, 238, 224, 0.16);
+  --muted: #9a907e;
+  --accent: #f59e0b;
+  --accent-hover: #fbbf24;
+  --accent-muted: rgba(245, 158, 11, 0.12);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
-  --glass-bg: rgba(17, 24, 39, 0.6);
-  --glass-border: rgba(148, 163, 184, 0.12);
+  --glass-bg: rgba(28, 24, 19, 0.65);
+  --glass-border: rgba(245, 158, 11, 0.12);
 }
 
 @theme inline {
@@ -127,12 +130,14 @@ body {
 
 .page-gradient {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(30, 64, 175, 0.08), transparent),
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(180, 83, 9, 0.08), transparent),
+    radial-gradient(rgba(180, 83, 9, 0.04) 1.2px, transparent 1.2px) 0 0 / 24px 24px,
     var(--background);
 }
 
 .dark .page-gradient {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.06), transparent),
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(245, 158, 11, 0.06), transparent),
+    radial-gradient(rgba(245, 158, 11, 0.02) 1.2px, transparent 1.2px) 0 0 / 24px 24px,
     var(--background);
 }

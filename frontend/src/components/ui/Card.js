@@ -9,6 +9,7 @@ export default function Card({
   hover = false,
   glass = false,
   delay = 0,
+  accent = false,
   ...props
 }) {
   return (
@@ -18,12 +19,16 @@ export default function Card({
       transition={{ duration: 0.4, delay, ease: [0.22, 1, 0.36, 1] }}
       className={clsx(
         "rounded-xl p-5",
+        accent && "relative overflow-hidden",
         glass ? "glass-card" : "bg-surface border border-[var(--border)] shadow-[var(--shadow-sm)]",
         hover && "depth-hover cursor-pointer",
         className
       )}
       {...props}
     >
+      {accent && (
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-accent/70 to-transparent" />
+      )}
       {children}
     </motion.div>
   );
@@ -31,7 +36,7 @@ export default function Card({
 
 export function StatCard({ title, value, subtitle, icon: Icon, trend, delay = 0 }) {
   return (
-    <Card delay={delay} hover className="relative overflow-hidden">
+    <Card delay={delay} hover accent className="relative overflow-hidden">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-muted font-medium">{title}</p>
@@ -44,7 +49,7 @@ export function StatCard({ title, value, subtitle, icon: Icon, trend, delay = 0 
           )}
         </div>
         {Icon && (
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-muted text-accent">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-muted text-accent border border-accent/10">
             <Icon className="text-xl" />
           </div>
         )}

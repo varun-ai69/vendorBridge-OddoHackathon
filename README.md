@@ -95,7 +95,7 @@
 | **Authentication** | JWT (`jsonwebtoken`) + `bcrypt` |
 | **Environment** | `dotenv` |
 | **CORS** | `cors` |
-| **Frontend** | React (Vite) — `frontend/` |
+| **Frontend** | Next.js 16 (App Router) — `frontend/` → see `frontend/AGENTS.md` |
 
 ---
 
@@ -115,7 +115,7 @@ Oddo-Hackathon-2026/
 │   ├── .env                # Environment variables
 │   ├── package.json
 │   └── server.js           # App entry point
-├── frontend/               # React + Vite frontend
+├── frontend/               # Next.js frontend (see frontend/AGENTS.md)
 ├── api_contract.md         # Full API contract (standalone)
 └── README.md
 ```

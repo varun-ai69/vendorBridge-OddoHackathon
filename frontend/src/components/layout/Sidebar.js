@@ -44,13 +44,20 @@ export default function Sidebar({ collapsed, onToggle }) {
                   <motion.div
                     whileHover={{ x: 2 }}
                     className={clsx(
-                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors relative overflow-hidden",
                       active
-                        ? "bg-accent text-white shadow-sm"
+                        ? "bg-accent text-white shadow-[0_4px_12px_-2px_rgba(180,83,9,0.25)]"
                         : "text-muted hover:bg-accent-muted hover:text-foreground"
                     )}
                   >
-                    <NavIcon name={item.icon} className="text-lg shrink-0" />
+                    {active && (
+                      <motion.div
+                        layoutId="activeIndicator"
+                        className="absolute left-0 top-2.5 bottom-2.5 w-1 rounded-r bg-white"
+                        transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                      />
+                    )}
+                    <NavIcon name={item.icon} className={clsx("text-lg shrink-0", active && "pl-1")} />
                     {!collapsed && <span>{item.label}</span>}
                   </motion.div>
                 </Link>

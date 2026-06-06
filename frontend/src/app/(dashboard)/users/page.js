@@ -21,7 +21,7 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [inviteLoading, setInviteLoading] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", role: "procurement_officer", phone: "", department: "", generated_password: "" });
+  const [form, setForm] = useState({ name: "", email: "", role: "procurement_officer", phone: "", department: "", company_name: "", generated_password: "" });
 
   useEffect(() => {
     if (user?.role !== "admin") { router.replace("/dashboard"); return; }
@@ -42,7 +42,7 @@ export default function UsersPage() {
     try {
       await inviteUser(form);
       setModalOpen(false);
-      setForm({ name: "", email: "", role: "procurement_officer", phone: "", department: "", generated_password: "" });
+      setForm({ name: "", email: "", role: "procurement_officer", phone: "", department: "", company_name: "", generated_password: "" });
       loadUsers();
     } catch { /* handled by UI */ }
     finally { setInviteLoading(false); }
@@ -70,29 +70,36 @@ export default function UsersPage() {
     <PageTransition>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Users</h1>
-          <p className="text-sm text-muted mt-1">Manage team members and roles</p>
+          <h1 className="text-2xl font-bold">User & Vendor Credentials Console</h1>
+          <p className="text-sm text-muted mt-1">Manage login credentials and directory profiles for your team and vendors.</p>
         </div>
-        <Button icon={IoAdd} onClick={() => setModalOpen(true)}>Invite User</Button>
+        <Button icon={IoAdd} onClick={() => setModalOpen(true)}>Register User / Vendor</Button>
       </div>
 
-      <DataTable columns={columns} data={users} loading={loading} emptyIcon={IoPeople} emptyTitle="No users yet" emptyDescription="Invite your first team member to get started." emptyAction={<Button icon={IoAdd} onClick={() => setModalOpen(true)}>Invite User</Button>} />
+      <DataTable columns={columns} data={users} loading={loading} emptyIcon={IoPeople} emptyTitle="No users yet" emptyDescription="Register your first user or vendor account." emptyAction={<Button icon={IoAdd} onClick={() => setModalOpen(true)}>Register User / Vendor</Button>} />
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Invite User" size="md">
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Register New Account" size="md">
         <form onSubmit={handleInvite} className="space-y-4">
-          <Input label="Full Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+          <Input label="Full Name / Contact Person" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+          <Input label="Email Address" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
           <div>
-            <label className="text-sm font-medium">Role</label>
+            <label className="text-sm font-medium text-foreground/80">Role</label>
             <select className="mt-1.5 w-full rounded-lg border border-[var(--border-strong)] bg-surface px-3 py-2.5 text-sm" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
               <option value="procurement_officer">Procurement Officer</option>
               <option value="manager">Manager</option>
+              <option value="vendor">Vendor Partner</option>
             </select>
           </div>
-          <Input label="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-          <Input label="Department" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} />
+          <Input label="Phone Number" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+          
+          {form.role === "vendor" ? (
+            <Input label="Company Name" placeholder="e.g. Delta Castings Ltd" value={form.company_name} onChange={(e) => setForm({ ...form, company_name: e.target.value })} required />
+          ) : (
+            <Input label="Department" placeholder="e.g. Procurement" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} />
+          )}
+
           <Input label="Temporary Password" value={form.generated_password} onChange={(e) => setForm({ ...form, generated_password: e.target.value })} required />
-          <Button type="submit" loading={inviteLoading} className="w-full">Send Invite</Button>
+          <Button type="submit" loading={inviteLoading} className="w-full">Register & Create Account</Button>
         </form>
       </Modal>
     </PageTransition>

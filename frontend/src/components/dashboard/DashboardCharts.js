@@ -5,7 +5,7 @@ import {
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
 } from "recharts";
 
-const COLORS = ["#1e40af", "#3b82f6", "#60a5fa", "#93c5fd", "#bfdbfe"];
+const COLORS = ["#b45309", "#ca8a04", "#d97706", "#f59e0b", "#fbbf24"];
 
 export function SpendChart({ data = [] }) {
   if (!data.length) return null;
@@ -14,8 +14,8 @@ export function SpendChart({ data = [] }) {
       <AreaChart data={data}>
         <defs>
           <linearGradient id="spendGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#1e40af" stopOpacity={0.2} />
-            <stop offset="100%" stopColor="#1e40af" stopOpacity={0} />
+            <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.25} />
+            <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -25,7 +25,7 @@ export function SpendChart({ data = [] }) {
           contentStyle={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8 }}
           formatter={(v) => [`₹${v.toLocaleString("en-IN")}`, "Spend"]}
         />
-        <Area type="monotone" dataKey="total_spend" stroke="#1e40af" fill="url(#spendGrad)" strokeWidth={2} />
+        <Area type="monotone" dataKey="total_spend" stroke="var(--accent)" fill="url(#spendGrad)" strokeWidth={2} />
       </AreaChart>
     </ResponsiveContainer>
   );
