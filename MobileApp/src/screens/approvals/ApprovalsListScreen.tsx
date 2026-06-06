@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { useTheme } from "../../theme/ThemeContext";
 import { approvalService } from "../../services/approvalService";
 import { Approval } from "../../services/mocks/mockData";
+import { SkeletonListScreen } from "../../components/common/SkeletonLoader";
 
 const fmt = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
@@ -71,6 +72,10 @@ export const ApprovalsListScreen = ({ navigation }: any) => {
   const filtered = data.filter((a: Approval) => filter === "all" || a.status === filter);
   const pendingCount = data.filter((a: Approval) => a.status === "pending").length;
 
+  if (isLoading && data.length === 0) {
+    return <SkeletonListScreen count={4} />;
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Filter Tabs */}
@@ -104,7 +109,7 @@ export const ApprovalsListScreen = ({ navigation }: any) => {
           <View style={styles.empty}>
             <MaterialCommunityIcons name="checkbox-marked-circle-outline" size={52} color={colors.textMuted} />
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-              {isLoading ? "Loading..." : `No ${filter} approvals`}
+              {`No ${filter} approvals`}
             </Text>
           </View>
         }

@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { useTheme } from "../../theme/ThemeContext";
 import { poService } from "../../services/poService";
 import { PurchaseOrder } from "../../services/mocks/mockData";
+import { SkeletonListScreen } from "../../components/common/SkeletonLoader";
 
 const fmt = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
@@ -27,6 +28,10 @@ export const POListScreen = ({ navigation }: any) => {
     queryKey: ["pos"],
     queryFn: poService.getPOs,
   });
+
+  if (isLoading && data.length === 0) {
+    return <SkeletonListScreen count={4} />;
+  }
 
   return (
     <FlatList
@@ -75,7 +80,7 @@ export const POListScreen = ({ navigation }: any) => {
         <View style={styles.empty}>
           <MaterialCommunityIcons name="receipt-outline" size={52} color={colors.textMuted} />
           <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-            {isLoading ? "Loading..." : "No purchase orders yet"}
+            No purchase orders yet
           </Text>
         </View>
       }

@@ -11,6 +11,7 @@ import { useTheme } from "../../theme/ThemeContext";
 import { useAuthStore } from "../../store/authStore";
 import { rfqService } from "../../services/rfqService";
 import { RFQ } from "../../services/mocks/mockData";
+import { SkeletonListScreen } from "../../components/common/SkeletonLoader";
 
 const STATUS_META: Record<string, { color: string; icon: string; label: string }> = {
   draft:     { color: "#94a3b8", icon: "pencil-outline",       label: "Draft" },
@@ -89,6 +90,10 @@ export const RFQListScreen = ({ navigation }: any) => {
   const isPO = user?.role === "procurement_officer";
   const statuses = ["all", "sent", "draft", "closed", "awarded", "cancelled"];
 
+  if (isLoading && data.length === 0) {
+    return <SkeletonListScreen count={4} />;
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Search */}
@@ -150,7 +155,7 @@ export const RFQListScreen = ({ navigation }: any) => {
           <View style={styles.empty}>
             <MaterialCommunityIcons name="file-edit-outline" size={52} color={colors.textMuted} />
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-              {isLoading ? "Loading RFQs..." : "No RFQs found"}
+              No RFQs found
             </Text>
           </View>
         }

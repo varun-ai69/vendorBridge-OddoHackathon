@@ -9,6 +9,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../theme/ThemeContext";
 import { vendorService } from "../../services/vendorService";
 import { Vendor } from "../../services/mocks/mockData";
+import { SkeletonListScreen } from "../../components/common/SkeletonLoader";
 
 const StatusBadge = ({ active, approved }: { active: boolean; approved: boolean }) => {
   const { colors } = useTheme();
@@ -95,6 +96,10 @@ export const VendorListScreen = ({ navigation }: any) => {
     return matchSearch && matchFilter;
   });
 
+  if (isLoading && data.length === 0) {
+    return <SkeletonListScreen count={5} />;
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Search Bar */}
@@ -153,7 +158,7 @@ export const VendorListScreen = ({ navigation }: any) => {
           <View style={styles.empty}>
             <MaterialCommunityIcons name="store-off-outline" size={52} color={colors.textMuted} />
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-              {isLoading ? "Loading vendors..." : "No vendors found"}
+              No vendors found
             </Text>
           </View>
         }
