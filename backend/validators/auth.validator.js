@@ -24,6 +24,12 @@ const registerOrgSchema = (body) => {
     errors.push({ field: 'admin_email', issue: 'Must be a valid email address.' });
   }
 
+  if (required(errors, body, 'admin_phone', 'Admin phone')) {
+    if (!/^\+?[\d\s-]{10,15}$/.test(String(body.admin_phone).replace(/\s/g, ''))) {
+      errors.push({ field: 'admin_phone', issue: 'Must be a valid phone number.' });
+    }
+  }
+
   if (required(errors, body, 'admin_password', 'Admin password') && !isStrongPassword(body.admin_password)) {
     errors.push({
       field: 'admin_password',

@@ -24,7 +24,7 @@ const generateTokens = async (userId, orgId, role, name, email) => {
 };
 
 exports.registerOrg = catchAsync(async (req, res, next) => {
-  const { org_name, org_address, org_gst, org_industry, org_website, admin_name, admin_email, admin_password } = req.body;
+  const { org_name, org_address, org_gst, org_industry, org_website, admin_name, admin_email, admin_phone, admin_password } = req.body;
 
   const client = await pool.connect();
   try {
@@ -47,9 +47,9 @@ exports.registerOrg = catchAsync(async (req, res, next) => {
     // 2. Create Admin User
     const hashedPassword = await bcrypt.hash(admin_password, 12);
     const userResult = await client.query(
-      `INSERT INTO users (org_id, name, email, password_hash, role) 
-       VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-      [orgId, admin_name, admin_email, hashedPassword, 'admin']
+      `INSERT INTO users (org_id, name, email, password_hash, role, phone) 
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
+      [orgId, admin_name, admin_email, hashedPassword, 'admin', admin_phone]
     );
     const adminId = userResult.rows[0].id;
 
