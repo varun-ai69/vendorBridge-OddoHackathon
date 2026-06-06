@@ -1,0 +1,26 @@
+# backend/Dockerfile
+
+# Build stage — install all deps including devDependencies
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+
+# Production stage — only copy what's needed to run
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+# Create a non-root user so the container doesn't run as root
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app .
+
+# model/ files are only needed at DB init time (mounted into postgres container)
+# no need to ship them in the backend image
+
+USER appuser
+EXPOSE 5000
+
+CMD ["node", "server.js"]

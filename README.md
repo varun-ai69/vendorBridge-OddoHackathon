@@ -1208,6 +1208,29 @@ UPLOADS
 
 ---
 
+## 📱 Mobile Application
+
+VendorBridge includes a native mobile application built using **React Native (Expo SDK ~53)** and **TypeScript**. It serves the Admin, Procurement Officer, Manager, and Vendor roles in a responsive, modern environment with offline capabilities, biometric auth, haptic alerts, and custom dashboard layouts.
+
+For the full mobile project plan, execution timeline, technical stack details, and the 74-item implementation checklist, refer to the [Mobile App Handbook](file:///C:/Users/ahadd/Documents/GitHub/vendorBridge-OddoHackathon/Mobile%20App/README.md).
+
+### Quick Setup
+To get started with the mobile app:
+1. Go to the mobile application directory:
+   ```bash
+   cd "Mobile App"
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server (in mock mode by default):
+   ```bash
+   npx expo start
+   ```
+
+---
+
 ## 🤝 Contributing
 
 1. Fork the repository
